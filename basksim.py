@@ -1,3 +1,4 @@
+# Written from Jiseung computer
 import pygame, math
 
 pygame.init()
