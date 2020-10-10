@@ -1,4 +1,5 @@
 import pygame, math
+
 pygame.init()
 
 screen_width = 640
@@ -13,11 +14,20 @@ line_width = 3
 screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
 
 pygame.display.set_caption("Basketball Simulator")
-#icon = pygame.image.load("basketball_icon.png") #Produces an error while running on mac environment
-#pygame.display.set_icon(icon) #Produces an error while running on mac environment
+# icon = pygame.image.load("basketball_icon.png") #Produces an error while running on mac environment
+# pygame.display.set_icon(icon) #Produces an error while running on mac environment
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+
+
+class Player:
+    def __init__(self, position, height, size, back_number):
+        self.fouls = 0
+        self.position = position
+        self.height = height
+        self.size = size
+        self.back_number = back_number
 
 
 def resize(size):
@@ -87,33 +97,48 @@ def draw_halfline():
     pygame.draw.line(screen, WHITE, p1, p2, line_width)
 
 
-def draw_threepointline():#18.833333333333333
-    start1=(((screen_width - width) / 2 ),((screen_height)/2)+22*scale)
-    end1=(((screen_width - width) / 2)+14*scale,((screen_height)/2)+22*scale)
-    start2=(((screen_width - width) / 2),((screen_height)/2)-22*scale)
-    end2=(((screen_width - width) / 2)+14*scale,((screen_height)/2)-22*scale)
+def draw_threepointline():  # 18.833333333333333
+    start1 = (((screen_width - width) / 2), ((screen_height) / 2) + 22 * scale)
+    end1 = (
+        ((screen_width - width) / 2) + 14 * scale,
+        ((screen_height) / 2) + 22 * scale,
+    )
+    start2 = (((screen_width - width) / 2), ((screen_height) / 2) - 22 * scale)
+    end2 = (
+        ((screen_width - width) / 2) + 14 * scale,
+        ((screen_height) / 2) - 22 * scale,
+    )
     pygame.draw.line(screen, WHITE, start1, end1, line_width)
     pygame.draw.line(screen, WHITE, start2, end2, line_width)
     rect1 = (
-        int((((screen_width - width) / 2) + 5.25 * scale)-23.75*scale),
-        int((screen_height / 2)-23.75*scale), 47.5*scale, 47.5*scale
+        int((((screen_width - width) / 2) + 5.25 * scale) - 23.75 * scale),
+        int((screen_height / 2) - 23.75 * scale),
+        47.5 * scale,
+        47.5 * scale,
     )
     angle = math.atan2(22, 8.75)
-    pygame.draw.arc(screen, WHITE, rect1, -angle, angle, line_width )
+    pygame.draw.arc(screen, WHITE, rect1, -angle, angle, line_width)
 
-    start1=(((screen_width + width) / 2 ),((screen_height)/2)+22*scale)
-    end1=(((screen_width + width) / 2)-14*scale,((screen_height)/2)+22*scale)
-    start2=(((screen_width + width) / 2),((screen_height)/2)-22*scale)
-    end2=(((screen_width + width) / 2)-14*scale,((screen_height)/2)-22*scale)
+    start1 = (((screen_width + width) / 2), ((screen_height) / 2) + 22 * scale)
+    end1 = (
+        ((screen_width + width) / 2) - 14 * scale,
+        ((screen_height) / 2) + 22 * scale,
+    )
+    start2 = (((screen_width + width) / 2), ((screen_height) / 2) - 22 * scale)
+    end2 = (
+        ((screen_width + width) / 2) - 14 * scale,
+        ((screen_height) / 2) - 22 * scale,
+    )
     pygame.draw.line(screen, WHITE, start1, end1, line_width)
     pygame.draw.line(screen, WHITE, start2, end2, line_width)
     rect1 = (
-        int((((screen_width + width) / 2) - 5.25 * scale)-23.75*scale),
-        int((screen_height / 2)-23.75*scale), 47.5*scale, 47.5*scale
+        int((((screen_width + width) / 2) - 5.25 * scale) - 23.75 * scale),
+        int((screen_height / 2) - 23.75 * scale),
+        47.5 * scale,
+        47.5 * scale,
     )
     angle = math.atan2(22, 8.75)
-    pygame.draw.arc(screen, WHITE, rect1, math.pi -angle, math.pi+angle, line_width )
-    
+    pygame.draw.arc(screen, WHITE, rect1, math.pi - angle, math.pi + angle, line_width)
 
 
 def draw_freethrowline():
@@ -126,17 +151,16 @@ def draw_freethrowcircle():
 
 def draw_key():
     x = int((screen_width - width) / 2)
-    y = int((screen_height) / 2)-8*scale
+    y = int((screen_height) / 2) - 8 * scale
     pygame.draw.rect(
-        screen, WHITE, [x, y, 19*scale, 16*scale], line_width,
+        screen, WHITE, [x, y, 19 * scale, 16 * scale], line_width,
     )
 
-    x = int((screen_width + width) / 2) - 19*scale
-    y = int((screen_height) / 2)-8*scale
+    x = int((screen_width + width) / 2) - 19 * scale
+    y = int((screen_height) / 2) - 8 * scale
     pygame.draw.rect(
-        screen, WHITE, [x, y, 19*scale, 16*scale], line_width,
+        screen, WHITE, [x, y, 19 * scale, 16 * scale], line_width,
     )
-
 
 
 def drawCourt():
@@ -151,7 +175,28 @@ def drawCourt():
     draw_key()
 
 
+def generateTeam():
+    team = None
+    return team
+
+
+def drawTeam(team):
+    pass
+
+
+def drawPlayers(team1, team2):
+    drawTeam(team1)
+    drawTeam(team2)
+
+
+def drawBall():
+    pass
+
+
 def main():
+    team1 = generateTeam()
+    team2 = generateTeam()
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -162,13 +207,17 @@ def main():
                 screen.fill(BLACK)
                 drawCourt()
                 pygame.display.update()
-                
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     pass
         resize((screen_width, screen_height))
         screen.fill(BLACK)
+
         drawCourt()
+        drawPlayers(team1, team2)
+        drawBall()
+
         pygame.display.update()
 
 
