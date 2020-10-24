@@ -16,3 +16,20 @@ body {
     place-content: center;
     background-color: #f8e9d6;
 }
+
+.display {
+    width: 100px;
+    height: 20px;
+}
+
+.player {
+    position: absolute;
+    width: 1.5vw;
+    height: 1.5vw;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 1vw;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
