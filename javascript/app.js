@@ -125,7 +125,21 @@ function draw_nocharge_circle() {
   );
   buffer.stroke();
 }
-
+function draw_bball() {
+  const image = new Image();
+  image.src = "assets/bball_flat_icon.png";
+  buffer.drawImage(
+    image,
+    0,
+    0,
+    860,
+    907,
+    buffer.canvas.width / 2,
+    buffer.canvas.height / 2,
+    30,
+    30
+  );
+}
 function draw_threepointline() {
   buffer.beginPath();
   buffer.moveTo(0, 30);
@@ -277,32 +291,69 @@ class Player {
 }
 
 function generateTeam() {
-  const scale = 1.6;
-  const team = [
-    new Player("PG", 185, 86, 11, "Myron Boyce", 211 * scale, 170 * scale),
-    new Player("SG", 198, 94, 24, "Adam Chester", 183 * scale, 84 * scale),
-    new Player("SF", 202, 101, 34, "Daanyal Graves", 63 * scale, 264 * scale),
-    new Player("PF", 208, 111, 21, "Tyreese Ward", 55 * scale, 113 * scale),
-    new Player("C", 217, 121, 12, "Donovan Robinson", 96 * scale, 213 * scale),
+  const team1 = [
+    new Player("PG", 185, 86, 11, "Myron Boyce", 338, 272),
+    new Player("SG", 198, 94, 24, "Adam Chester", 293, 135),
+    new Player("SF", 202, 101, 34, "Daanyal Graves", 101, 423),
+    new Player("PF", 208, 111, 21, "Tyreese Ward", 88, 181),
+    new Player("C", 217, 121, 12, "Donovan Robinson", 154, 341),
   ];
-  return team;
+  const team2 = [
+    new Player("PG", 184, 89, 7, "Damion Lee", buffer.canvas.width - 338, 272),
+    new Player("SG", 200, 98, 13, "Chris Paul", buffer.canvas.width - 293, 135),
+    new Player(
+      "SF",
+      206,
+      102,
+      23,
+      "Zaire Willams",
+      buffer.canvas.width - 101,
+      423
+    ),
+    new Player(
+      "PF",
+      210,
+      107,
+      34,
+      "Giannis Antetokumpo",
+      buffer.canvas.width - 88,
+      181
+    ),
+    new Player(
+      "C",
+      216,
+      128,
+      54,
+      "Dwight Howard",
+      buffer.canvas.width - 154,
+      341
+    ),
+  ];
+  return [team1, team2];
 }
-function drawTeam(team) {
+function drawTeam(team, color) {
   for (player of team) {
     console.log(player);
     buffer.beginPath();
-    buffer.fillStyle = "black";
+    buffer.fillStyle = color;
     buffer.arc(player.x, player.y, 10, 0, Math.PI * 2);
     buffer.fill();
+    buffer.font = "10px Arial";
+    buffer.fillStyle = "white";
+    buffer.fillText(player.role, player.x - 7, player.y + 4);
   }
 }
-function update() {}
+function update() {
+  // roster1[0].x -= 1;
+  // roster1[0].y -= 1;
+}
 
 function render() {
   drawBackground("#b86125");
   drawCourtLines();
-  drawTeam(roster);
-
+  drawTeam(roster1, "black");
+  drawTeam(roster2, "purple");
+  draw_bball();
   context.drawImage(
     buffer.canvas,
     0,
@@ -315,7 +366,6 @@ function render() {
     context.canvas.height
   );
 }
-
 function start() {
   update();
   render();
@@ -325,5 +375,6 @@ function start() {
 window.addEventListener("resize", resize);
 
 resize();
-const roster = generateTeam();
+const [roster1, roster2] = generateTeam();
+console.log(roster1, roster2);
 start();
