@@ -295,39 +295,30 @@ function generateTeam() {
 
 // Change this to react
 function setDOM(playerDOM, player) {
+    // prettier-ignore
+    let position = convertToWindowCoord(new Vector2(player.x - 10, player.y - 10));
     const displayDOM = document.querySelector('.display');
 
-    let position = convertToWindowCoord(
-        new Vector2(player.x - 10, player.y - 10)
-    );
-
+    // prettier-ignore
+    playerDOM.style.transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
     playerDOM.innerHTML = player.back_number;
-
-    playerDOM.style.transform =
-        'translate(' + position.x + 'px, ' + position.y + 'px)';
 
     playerDOM.addEventListener('mouseover', () => {
         displayDOM.style.display = 'block';
-        displayDOM.style.transform =
-            'translate(' +
-            (position.x - displayDOM.offsetWidth) +
-            'px, ' +
-            (position.y - displayDOM.offsetHeight) +
-            'px)';
-        displayDOM.innerHTML =
-            player.name +
-            '<br>' +
-            player.role +
-            '<br>' +
-            player.height +
-            'cm<br>' +
-            player.weight +
-            'kg';
+
+        // prettier-ignore
+        displayDOM.style.transform = 'translate(' + 
+        (position.x - displayDOM.offsetWidth) + 'px, ' + 
+        (position.y - displayDOM.offsetHeight) + 'px)';
+
+        // prettier-ignore
+        displayDOM.innerHTML = player.name + '<br>' + player.role + 
+        '<br>' + player.height + 'cm<br>' + player.weight + 'kg';
         console.log(displayDOM.offsetWidth, displayDOM.offsetHeight);
     });
-    playerDOM.addEventListener('mouseleave', () => {
-        displayDOM.style.display = 'none';
-    });
+
+    // prettier-ignore
+    playerDOM.addEventListener('mouseleave', () => displayDOM.style.display = 'none')
 }
 
 function drawTeam(team, color) {
