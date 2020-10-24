@@ -106,6 +106,22 @@ function draw_nocharge_circle() {
     buffer.stroke();
 }
 
+function draw_bball() {
+    const image = new Image();
+    image.src = 'assets/bball_flat_icon.png';
+    buffer.drawImage(
+        image,
+        0,
+        0,
+        860,
+        907,
+        buffer.canvas.width / 2,
+        buffer.canvas.height / 2,
+        30,
+        30
+    );
+}
+
 function draw_threepointline() {
     buffer.beginPath();
     buffer.moveTo(0, 30);
@@ -257,54 +273,87 @@ class Player {
 }
 
 function generateTeam() {
-    const scale = 1.6;
     // prettier-ignore
-    const team = [
-        new Player('PG', 185, 86, 11, 'Myron Boyce', 211 * scale, 170 * scale),
-        new Player('SG', 198, 94, 24, 'Adam Chester', 183 * scale, 84 * scale),
-        new Player('SF',202, 101, 34, 'Daanyal Graves', 63 * scale, 264 * scale),
-        new Player('PF', 208, 111, 21, 'Tyreese Ward', 55 * scale, 113 * scale),
-        new Player('C', 217, 121, 12, 'Donovan Robinson', 96 * scale, 213 * scale),
+    const team1 = [
+        new Player('PG', 185, 86, 11, 'Myron Boyce', 338, 272),
+        new Player('SG', 198, 94, 24, 'Adam Chester', 293, 135),
+        new Player('SF', 202, 101, 34, 'Daanyal Graves', 101, 423),
+        new Player('PF', 208, 111, 21, 'Tyreese Ward', 88, 181),
+        new Player('C', 217, 121, 12, 'Donovan Robinson', 154, 341),
     ];
-    return team;
-}
-function drawTeam(team) {
-    const playerDOM = document.querySelectorAll('.player');
-    let i = 0;
-    let position = new Vector2();
+    // prettier-ignore
+    const team2 = [
+        new Player('PG', 184, 89, 7, 'Damion Lee', buffer.canvas.width - 338, 272),
+        new Player('SG', 200, 98, 13, 'Chris Paul', buffer.canvas.width - 293, 135),
+        new Player('SF', 206, 102, 23, 'Zaire Willams', buffer.canvas.width - 101, 423),
+        new Player('PF', 210, 107, 34, 'Giannis Antetokumpo', buffer.canvas.width - 88, 181),
+        new Player('C', 216, 128, 54, 'Dwight Howard', buffer.canvas.width - 154, 341),
+    ];
 
-    for (player of team) {
+    return [team1, team2];
+}
+
+// Change this to react
+function setDOM(playerDOM, player) {
+    const displayDOM = document.querySelector('.display');
+
+    let position = convertToWindowCoord(
+        new Vector2(player.x - 10, player.y - 10)
+    );
+
+    playerDOM.innerHTML = player.back_number;
+
+    playerDOM.style.transform =
+        'translate(' + position.x + 'px, ' + position.y + 'px)';
+
+    playerDOM.addEventListener('mouseover', () => {
+        displayDOM.style.display = 'block';
+        displayDOM.style.transform =
+            'translate(' +
+            (position.x - displayDOM.offsetWidth) +
+            'px, ' +
+            (position.y - displayDOM.offsetHeight) +
+            'px)';
+        displayDOM.innerHTML =
+            player.name +
+            '<br>' +
+            player.role +
+            '<br>' +
+            player.height +
+            'cm<br>' +
+            player.weight +
+            'kg';
+        console.log(displayDOM.offsetWidth, displayDOM.offsetHeight);
+    });
+    playerDOM.addEventListener('mouseleave', () => {
+        displayDOM.style.display = 'none';
+    });
+}
+
+function drawTeam(team, color) {
+    const playerDOM = document.querySelectorAll('.' + color);
+
+    team.forEach((player, index) => {
         buffer.beginPath();
-        buffer.fillStyle = 'black';
+        buffer.fillStyle = color;
         buffer.arc(player.x, player.y, 10, 0, Math.PI * 2);
         buffer.fill();
 
-        position = convertToWindowCoord(
-            new Vector2(player.x - 10, player.y - 10)
-        );
-
-        playerDOM[i].style.transform =
-            'translate(' + position.x + 'px, ' + position.y + 'px)';
-
-        playerDOM[i].addEventListener('mouseover', () => {
-            document.querySelector('.display').innerHTML = player.name;
-        });
-
-        i++;
-    }
+        setDOM(playerDOM[index], player);
+    });
 }
 
 function update() {
-    // for (player of roster) {
-    //     player.x += 1;
-    // }
+    // roster1[0].x -= 1;
+    // roster1[0].y -= 1;
 }
 
 function render() {
     drawBackground('#b86125');
     drawCourtLines();
-    drawTeam(roster);
-
+    drawTeam(roster1, 'black');
+    drawTeam(roster2, 'purple');
+    draw_bball();
     context.drawImage(
         buffer.canvas,
         0,
@@ -327,6 +376,7 @@ function start() {
 window.addEventListener('resize', resize);
 canvas.addEventListener('mousemove', handleMouseMove);
 
+const [roster1, roster2] = generateTeam();
+
 resize();
-const roster = generateTeam();
 start();
