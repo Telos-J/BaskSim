@@ -335,8 +335,10 @@ function drawTeam(team, color) {
 }
 
 function update() {
-  // roster1[0].x -= 1;
-  // roster1[0].y -= 1;
+  if (controller.up.active)
+    roster1[0].y -= 1;
+  else if (controller.down.active)
+    roster1[0].y += 1;
 }
 
 function render() {
@@ -364,10 +366,18 @@ function start() {
   window.requestAnimationFrame(start);
 }
 
+function keyDownUp(event) {
+  controller.keyDownUp(event.type, event.keyCode)
+}
+
 window.addEventListener("resize", resize);
+window.addEventListener("keydown", keyDownUp);
+window.addEventListener("keyup", keyDownUp);
 canvas.addEventListener("mousemove", handleMouseMove);
 
+
 const [roster1, roster2] = generateTeam();
+const controller = new Controller()
 
 resize();
 start();
