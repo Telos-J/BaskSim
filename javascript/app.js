@@ -111,17 +111,7 @@ function draw_nocharge_circle() {
 function draw_bball() {
   const image = new Image();
   image.src = "assets/bball_flat_icon.png";
-  buffer.drawImage(
-    image,
-    0,
-    0,
-    860,
-    907,
-    bball.x-15,
-    bball.y-15,
-    30,
-    30
-  );
+  buffer.drawImage(image, 0, 0, 860, 907, bball.x - 15, bball.y - 15, 30, 30);
 }
 
 function draw_threepointline() {
@@ -272,6 +262,9 @@ class Player {
     this.x = x;
     this.y = y;
   }
+  shoot() {
+    console.log("shoot");
+  }
 }
 
 function generateTeam() {
@@ -341,10 +334,12 @@ function update() {
   if (controller.down.active) roster1[0].y += 2;
   if (controller.left.active) roster1[0].x -= 2;
   if (controller.right.active) roster1[0].x += 2;
-
-  const dist = Math.hypot(roster1[0].x - bball.x, roster1[0].y - bball.y)
+  if (controller.space.active) roster1[0].shoot();
+  const dist = Math.hypot(roster1[0].x - bball.x, roster1[0].y - bball.y);
   if (dist < 15) {
-    console.log('dribble')
+    bball.x = roster1[0].x;
+    bball.y = roster1[0].y;
+    // console.log('dribble')
   }
 }
 
