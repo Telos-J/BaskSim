@@ -1,7 +1,7 @@
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 const buffer = document.createElement("canvas").getContext("2d");
-
+const bball = { coord: [buffer.canvas.width / 2, buffer.canvas.height / 2] };
 buffer.canvas.width = 940;
 buffer.canvas.height = 500;
 
@@ -115,8 +115,8 @@ function draw_bball() {
     0,
     860,
     907,
-    buffer.canvas.width / 2,
-    buffer.canvas.height / 2,
+    bball.coord[0],
+    bball.coord[1],
     30,
     30
   );
@@ -335,10 +335,12 @@ function drawTeam(team, color) {
 }
 
 function update() {
-  if (controller.up.active)
-    roster1[0].y -= 1;
-  else if (controller.down.active)
-    roster1[0].y += 1;
+  if (roster1[0].x === bball.coord[0] && roster1[0].y === bball.coord[1])
+    console.log("dribble");
+  if (controller.up.active) roster1[0].y -= 2;
+  if (controller.down.active) roster1[0].y += 2;
+  if (controller.left.active) roster1[0].x -= 2;
+  if (controller.right.active) roster1[0].x += 2;
 }
 
 function render() {
@@ -367,7 +369,7 @@ function start() {
 }
 
 function keyDownUp(event) {
-  controller.keyDownUp(event.type, event.keyCode)
+  controller.keyDownUp(event.type, event.keyCode);
 }
 
 window.addEventListener("resize", resize);
@@ -375,9 +377,8 @@ window.addEventListener("keydown", keyDownUp);
 window.addEventListener("keyup", keyDownUp);
 canvas.addEventListener("mousemove", handleMouseMove);
 
-
 const [roster1, roster2] = generateTeam();
-const controller = new Controller()
+const controller = new Controller();
 
 resize();
 start();
