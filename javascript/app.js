@@ -1,9 +1,11 @@
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 const buffer = document.createElement("canvas").getContext("2d");
-const bball = { coord: [buffer.canvas.width / 2, buffer.canvas.height / 2] };
+
 buffer.canvas.width = 940;
 buffer.canvas.height = 500;
+
+const bball = { x: buffer.canvas.width / 2, y: buffer.canvas.height / 2 };
 
 function drawBackground(color) {
   buffer.fillStyle = color;
@@ -115,8 +117,8 @@ function draw_bball() {
     0,
     860,
     907,
-    bball.coord[0],
-    bball.coord[1],
+    bball.x-15,
+    bball.y-15,
     30,
     30
   );
@@ -335,12 +337,15 @@ function drawTeam(team, color) {
 }
 
 function update() {
-  if (roster1[0].x === bball.coord[0] && roster1[0].y === bball.coord[1])
-    console.log("dribble");
   if (controller.up.active) roster1[0].y -= 2;
   if (controller.down.active) roster1[0].y += 2;
   if (controller.left.active) roster1[0].x -= 2;
   if (controller.right.active) roster1[0].x += 2;
+
+  const dist = Math.hypot(roster1[0].x - bball.x, roster1[0].y - bball.y)
+  if (dist < 15) {
+    console.log('dribble')
+  }
 }
 
 function render() {
