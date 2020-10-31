@@ -356,8 +356,11 @@ function update() {
         controlPlayer.shoot(bball);
 
     // Detect when player is able to grab the ball
-    let dist = Math.hypot(controlPlayer.x - bball.x, controlPlayer.y - bball.y);
-    if (dist < bball.size && !bball.shooting) {
+    let distBall = Math.hypot(
+        controlPlayer.x - bball.x,
+        controlPlayer.y - bball.y
+    );
+    if (distBall < bball.size && !bball.shooting) {
         controlPlayer.hasBall = true;
         bball.x = controlPlayer.x;
         bball.y = controlPlayer.y;
@@ -371,17 +374,17 @@ function update() {
 
         bball.x += bball.speed * Math.cos(angle);
         bball.y += bball.speed * Math.sin(angle);
-    }
 
-    // Reset ball position when is a goal
-    dist = Math.hypot(
-        controlPlayer.target.x - bball.x,
-        controlPlayer.target.y - bball.y
-    );
-    if (dist < bball.size / 1.5) {
-        bball.shooting = false;
-        bball.x = buffer.canvas.width / 2;
-        bball.y = buffer.canvas.height / 2;
+        // Reset ball position when is a goal
+        const distHoop = Math.hypot(
+            controlPlayer.target.x - bball.x,
+            controlPlayer.target.y - bball.y
+        );
+        if (distHoop < bball.size / 1.5) {
+            bball.shooting = false;
+            bball.x = controlPlayer.target.x;
+            bball.y = controlPlayer.target.y;
+        }
     }
 }
 
