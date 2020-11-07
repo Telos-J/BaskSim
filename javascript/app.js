@@ -321,6 +321,11 @@ class Player {
   }
 }
 
+let score = 0;
+let attempt = 0;
+let made = 0;
+let shootProb = 0;
+
 function generateTeam() {
   const target1 = {
     x: buffer.canvas.width - 55,
@@ -419,11 +424,26 @@ function update() {
       if (Math.random() < bball.probability) {
         bball.x = bball.target.x;
         bball.y = bball.target.y;
+        attempt += 1;
+        if (bball.probability == controlPlayer.attribute.shoot3) {
+          score += 3;
+          0;
+          made += 1;
+          shootProb = made / attempt;
+        } else {
+          score += 2;
+          made += 1;
+          shootProb = made / attempt;
+        }
+        console.log(score);
+        if (attempt >= 1) console.log(shootProb);
       } else {
+        attempt += 1;
         bball.bounceoff = true;
         const angle = Math.random() * Math.PI + (Math.PI * 3) / 2;
         bball.target.x = bball.target.x - 80 * Math.cos(angle);
         bball.target.y = bball.target.y + 80 * Math.sin(angle);
+        if (attempt >= 1) console.log(shootProb);
       }
     }
   } else if (bball.bounceoff == true) {
