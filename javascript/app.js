@@ -437,12 +437,6 @@ function render() {
   );
 }
 
-function start() {
-  update();
-  render();
-  window.requestAnimationFrame(start);
-}
-
 function keyDownUp(event) {
   controller.keyDownUp(event.type, event.keyCode);
 }
@@ -455,6 +449,7 @@ canvas.addEventListener("mousemove", handleMouseMove);
 const [roster1, roster2] = generateTeam();
 let controlPlayer = roster1[0];
 const controller = new Controller();
+const engine = new Engine(1 / 30, update, render);
 
 resize();
-start();
+engine.start();
