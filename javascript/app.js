@@ -46,6 +46,32 @@ class Player {
         this.score = 0;
         this.goals = 0;
         this.shootProb = 0;
+        this.frames = [];
+        this.framenum = 0;
+    }
+    initAnimation() {
+        for (let i = 1; i < 8; i++) {
+            const image = new Image();
+            image.src = 'assets/player_dribble/' + i + '.png';
+            this.frames.push(image);
+        }
+    }
+    animate() {
+        context.drawImage(
+            this.frames[this.framenum],
+            0,
+            0,
+            119,
+            162,
+            this.x - 40,
+            this.y - 54,
+            80,
+            108
+        );
+        this.framenum++;
+        if (this.framenum > 6) {
+            this.framenum = 0;
+        }
     }
     grabBall(ball) {
         const distance = Math.hypot(this.x - ball.x, this.y - ball.y);
@@ -433,9 +459,9 @@ function drawTeam(team, color) {
 
     team.forEach((player, index) => {
         buffer.beginPath();
-        buffer.fillStyle = color;
-        buffer.arc(player.x, player.y, 10, 0, Math.PI * 2);
-        buffer.fill();
+        // buffer.fillStyle = color;
+        // buffer.arc(player.x, player.y, 10, 0, Math.PI * 2);
+        // buffer.fill();
 
         setDOM(playerDOM[index], player);
     });
@@ -494,6 +520,7 @@ function render() {
         context.canvas.width,
         context.canvas.height
     );
+    controlPlayer.animate();
 }
 
 function keyDownUp(event) {
@@ -511,4 +538,5 @@ const controller = new Controller();
 const engine = new Engine(1 / 30, update, render);
 
 resize();
+controlPlayer.initAnimation();
 engine.start();
