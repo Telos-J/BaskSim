@@ -49,30 +49,6 @@ class Player {
         this.frames = [];
         this.framenum = 0;
     }
-    initAnimation() {
-        for (let i = 1; i < 8; i++) {
-            const image = new Image();
-            image.src = 'assets/player_dribble/' + i + '.png';
-            this.frames.push(image);
-        }
-    }
-    animate() {
-        context.drawImage(
-            this.frames[this.framenum],
-            0,
-            0,
-            119,
-            162,
-            this.x - 40,
-            this.y - 54,
-            80,
-            108
-        );
-        this.framenum++;
-        if (this.framenum > 6) {
-            this.framenum = 0;
-        }
-    }
     grabBall(ball) {
         const distance = Math.hypot(this.x - ball.x, this.y - ball.y);
         if (distance < ball.size && !ball.shooting) {
@@ -426,12 +402,13 @@ function generateTeam() {
 // Change this to react
 function setDOM(playerDOM, player) {
     // prettier-ignore
-    let position = convertToWindowCoord(new Vector2(player.x - 10, player.y - 10));
+    let position = convertToWindowCoord(new Vector2(player.x - 20, player.y - 20));
     const displayDOM = document.querySelector('.display');
 
     // prettier-ignore
     playerDOM.style.transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
-    playerDOM.innerHTML = player.back_number;
+    playerDOM.getElementsByClassName('number')[0].innerHTML =
+        player.back_number;
 
     playerDOM.addEventListener('mouseover', () => {
         displayDOM.style.display = 'block';
@@ -442,7 +419,7 @@ function setDOM(playerDOM, player) {
         (position.y - displayDOM.offsetHeight) + 'px)';
 
         // prettier-ignore
-        displayDOM.innerHTML = player.name + '<br>' + player.role + 
+        displayDOM.innerHTML = player.name + '<br>' + player.role +
         '<br>' + player.height + 'cm<br>' + player.weight + 'kg';
     });
 
@@ -458,20 +435,15 @@ function drawTeam(team, color) {
     const playerDOM = document.querySelectorAll('.' + color);
 
     team.forEach((player, index) => {
-        buffer.beginPath();
-        // buffer.fillStyle = color;
-        // buffer.arc(player.x, player.y, 10, 0, Math.PI * 2);
-        // buffer.fill();
-
         setDOM(playerDOM[index], player);
     });
 }
 
 function update() {
-    if (controller.up.active) controlPlayer.y -= 2;
-    if (controller.down.active) controlPlayer.y += 2;
-    if (controller.left.active) controlPlayer.x -= 2;
-    if (controller.right.active) controlPlayer.x += 2;
+    if (controller.up.active) controlPlayer.y -= 5;
+    if (controller.down.active) controlPlayer.y += 5;
+    if (controller.left.active) controlPlayer.x -= 5;
+    if (controller.right.active) controlPlayer.x += 5;
     if (controller.space.active && controlPlayer.hasBall)
         controlPlayer.shoot(bball);
 
@@ -506,7 +478,7 @@ function update() {
 function render() {
     drawBackground('#b86125');
     drawCourtLines();
-    drawTeam(roster1, 'black');
+    drawTeam(roster1, 'green');
     // drawTeam(roster2, "purple");
     draw_bball();
     context.drawImage(
@@ -520,7 +492,6 @@ function render() {
         context.canvas.width,
         context.canvas.height
     );
-    controlPlayer.animate();
 }
 
 function keyDownUp(event) {
@@ -538,5 +509,4 @@ const controller = new Controller();
 const engine = new Engine(1000 / 30, update, render);
 
 resize();
-controlPlayer.initAnimation();
 engine.start();

@@ -27,15 +27,17 @@ body {
     background-color: white;
 }
 
-.black,
+.green,
 .purple {
     position: absolute;
-    width: 1.5vw;
-    height: 1.5vw;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0);
-    font-size: 1vw;
-    color: white;
+    width: 2vw;
+    color: black;
     text-align: center;
     cursor: pointer;
+}
+
+.green .number {
+    position: absolute;
+    transform: translate(0.6vw, 1.3vw);
+    font-size: 1vw;
 }
