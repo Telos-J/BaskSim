@@ -535,7 +535,7 @@ canvas.addEventListener('mousemove', handleMouseMove);
 const [roster1, roster2] = generateTeam();
 let controlPlayer = roster1[0];
 const controller = new Controller();
-const engine = new Engine(1 / 30, update, render);
+const engine = new Engine(1000 / 30, update, render);
 
 resize();
 controlPlayer.initAnimation();
