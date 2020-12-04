@@ -36,6 +36,10 @@ body {
     cursor: pointer;
 }
 
+.blob {
+    width: 2vw;
+}
+
 .green .number {
     position: absolute;
     transform: translate(0.6vw, 1.3vw);
