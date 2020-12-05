@@ -165,17 +165,17 @@
                 );
             });
 
-            blobs.forEach((blob) => {
-                const blob_paths = Array.from(blob.children);
-                blob_paths.map(function (item, idx) {
-                    gsap.to(item, {
-                        duration: 1,
-                        repeat: -1,
-                        yoyo: true,
-                        morphSVG: idle2_paths[idx],
-                    });
-                });
-            });
+            // blobs.forEach((blob) => {
+            //     const blob_paths = Array.from(blob.children);
+            //     blob_paths.map(function (item, idx) {
+            //         gsap.to(item, {
+            //             duration: 1,
+            //             repeat: -1,
+            //             yoyo: true,
+            //             morphSVG: idle2_paths[idx],
+            //         });
+            //     });
+            // });
         </script>
         <script src="js/helper.js"></script>
         <script src="js/controller.js"></script>

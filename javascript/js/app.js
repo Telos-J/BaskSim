@@ -488,6 +488,14 @@ function update() {
         controlPlayer.isMoving = false;
 
     if (!controlPlayer.wasMoving && controlPlayer.isMoving) {
+        blobs.forEach((blob) => {
+            const blob_paths = Array.from(blob.children);
+            blob_paths.map(function (item, idx) {
+                gsap.set(item, {
+                    morphSVG: walk_paths[idx],
+                });
+            });
+        });
         walk_timeline.play();
     } else if (controlPlayer.wasMoving && !controlPlayer.isMoving) {
         walk_timeline.pause();
