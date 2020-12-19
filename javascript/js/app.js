@@ -111,8 +111,13 @@ const bball = {
   bounceoff() {
     this.bouncingoff = true;
     const angle = Math.random() * Math.PI + (Math.PI * 3) / 2;
-    this.target.x = this.target.x - 80 * Math.cos(angle);
-    this.target.y = this.target.y + 80 * Math.sin(angle);
+    if (this.target.x > buffer.canvas.width / 2) {
+      this.target.x = this.target.x - 80 * Math.cos(angle);
+      this.target.y = this.target.y + 80 * Math.sin(angle);
+    } else {
+      this.target.x = this.target.x + 80 * Math.cos(angle);
+      this.target.y = this.target.y + 80 * Math.sin(angle);
+    }
   },
 };
 
