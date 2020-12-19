@@ -15,3 +15,18 @@ function keyDownUp(event) {
 window.addEventListener('keydown', keyDownUp);
 window.addEventListener('keyup', keyDownUp);
 canvas.addEventListener('mousemove', handleMouseMove);
+
+gsap.registerPlugin(MorphSVGPlugin);
+
+const blobs = Array.from(document.getElementsByClassName('blob'));
+const idle = document.querySelector('.blob');
+const idle_paths = Array.from(idle.children);
+const idle2 = document.querySelector('#idle2');
+const idle2_paths = Array.from(idle2.children);
+
+const walk = document.querySelector('#walk');
+const walk_paths = Array.from(walk.children);
+const walk2 = document.querySelector('#walk2');
+const walk2_paths = Array.from(walk2.children);
+
+const walk_timeline = gsap.timeline({ paused: true });
