@@ -75,7 +75,9 @@ function drawTeam(team, color) {
 
     team.forEach((player, index) => {
         let position = convertToWindowCoord(
-            new Vector2(player.x - 20, player.y - 20)
+            player.playerDOM.querySelector('svg').classList.contains('flip')
+                ? new Vector2(player.x - 20, player.y - 20)
+                : new Vector2(player.x - 40, player.y - 20)
         );
 
         playerDOM[index].style.transform =

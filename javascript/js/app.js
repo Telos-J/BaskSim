@@ -55,6 +55,7 @@ class Player {
             ball.y = this.y;
         }
     }
+
     shoot(ball) {
         this.hasBall = false;
         ball.shooting = true;
@@ -115,8 +116,14 @@ const bball = {
     bounceoff() {
         this.bouncingoff = true;
         const angle = Math.random() * Math.PI + (Math.PI * 3) / 2;
-        this.target.x = this.target.x - 80 * Math.cos(angle);
-        this.target.y = this.target.y + 80 * Math.sin(angle);
+
+        if (this.target.x > buffer.canvas.width / 2) {
+            this.target.x = this.target.x - 80 * Math.cos(angle);
+            this.target.y = this.target.y + 80 * Math.sin(angle);
+        } else {
+            this.target.x = this.target.x + 80 * Math.cos(angle);
+            this.target.y = this.target.y + 80 * Math.sin(angle);
+        }
     },
 };
 
@@ -137,12 +144,16 @@ function update() {
     }
     if (buffer.canvas.width >= controlPlayer.x) {
         if (controller.right.active) {
+            controlPlayer.playerDOM
+                .querySelector('svg')
+                .classList.remove('flip');
             controlPlayer.x += 5;
             controlPlayer.isMoving = true;
         }
     }
     if (0 < controlPlayer.x) {
         if (controller.left.active) {
+            controlPlayer.playerDOM.querySelector('svg').classList.add('flip');
             controlPlayer.x -= 5;
             controlPlayer.isMoving = true;
         }

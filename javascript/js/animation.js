@@ -19,7 +19,7 @@ function walkAnimation(paths) {
     paths.map(function (item, idx) {
         if (idx == 0) {
             shapeIndex = 10;
-        } else if (idx == 4) {
+        } else if (idx == 4 || idx == 1) {
             shapeIndex = 0;
         } else {
             shapeIndex = 'auto';
@@ -30,9 +30,10 @@ function walkAnimation(paths) {
                 morphSVG: walk_paths[idx],
             },
             {
-                duration: 0.1,
+                duration: 0.2,
                 repeat: -1,
                 yoyo: true,
+                ease: 'none',
                 morphSVG: {
                     shape: walk2_paths[idx],
                     shapeIndex: shapeIndex,

@@ -41,8 +41,18 @@ body {
     height: 5vw;
 }
 
+.blob.flip {
+    transform: rotateY(180deg);
+}
+
 .green .number {
     position: absolute;
     transform: translate(2.2vw, 2vw);
     font-size: 1vw;
+    z-index: 1;
+}
+
+.ball {
+    position: absolute;
+    width: 2rem;
 }
