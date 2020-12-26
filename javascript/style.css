@@ -42,7 +42,7 @@ body {
 }
 
 .blob.flip {
-    transform: rotateY(180deg);
+    transform: rotateY(180deg) translateX(2vw);
 }
 
 .green .number {
@@ -57,10 +57,6 @@ body {
     transform: translate(2.2vw, 2vw);
     font-size: 1vw;
     z-index: 2;
-}
-
-.blob.flip {
-    transform: rotateY(180deg);
 }
 
 #basketball {
