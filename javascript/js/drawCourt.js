@@ -1,245 +1,250 @@
 function drawBackground(color) {
-    buffer.fillStyle = color;
-    buffer.fillRect(0, 0, buffer.canvas.width, buffer.canvas.height);
+  buffer.fillStyle = color;
+  buffer.fillRect(0, 0, buffer.canvas.width, buffer.canvas.height);
 }
 
 function draw_sideline() {
-    buffer.strokeRect(0, 0, buffer.canvas.width, buffer.canvas.height);
+  buffer.strokeRect(0, 0, buffer.canvas.width, buffer.canvas.height);
 }
 
 function draw_halfline() {
-    buffer.beginPath();
-    buffer.moveTo(buffer.canvas.width / 2, 0);
-    buffer.lineTo(buffer.canvas.width / 2, buffer.canvas.height);
-    buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(buffer.canvas.width / 2, 0);
+  buffer.lineTo(buffer.canvas.width / 2, buffer.canvas.height);
+  buffer.stroke();
 }
 
 function draw_centercircle() {
-    buffer.beginPath();
-    buffer.arc(
-        buffer.canvas.width / 2,
-        buffer.canvas.height / 2,
-        20,
-        0,
-        2 * Math.PI
-    );
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.arc(
-        buffer.canvas.width / 2,
-        buffer.canvas.height / 2,
-        60,
-        0,
-        2 * Math.PI
-    );
-    buffer.stroke();
+  buffer.beginPath();
+  buffer.arc(
+    buffer.canvas.width / 2,
+    buffer.canvas.height / 2,
+    20,
+    0,
+    2 * Math.PI
+  );
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.arc(
+    buffer.canvas.width / 2,
+    buffer.canvas.height / 2,
+    60,
+    0,
+    2 * Math.PI
+  );
+  buffer.stroke();
 }
 
 function draw_hoop() {
-    buffer.beginPath();
-    buffer.arc(55, buffer.canvas.height / 2, 15, 0, 2 * Math.PI);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.arc(
-        buffer.canvas.width - 55,
-        buffer.canvas.height / 2,
-        15,
-        0,
-        2 * Math.PI
-    );
-    buffer.stroke();
+  buffer.beginPath();
+  buffer.arc(55, buffer.canvas.height / 2, 15, 0, 2 * Math.PI);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.arc(
+    buffer.canvas.width - 55,
+    buffer.canvas.height / 2,
+    15,
+    0,
+    2 * Math.PI
+  );
+  buffer.stroke();
 }
 
 function draw_backboard() {
-    buffer.beginPath();
-    buffer.moveTo(40, buffer.canvas.height / 2 - 30);
-    buffer.lineTo(40, buffer.canvas.height / 2 + 30);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.moveTo(buffer.canvas.width - 40, buffer.canvas.height / 2 - 30);
-    buffer.lineTo(buffer.canvas.width - 40, buffer.canvas.height / 2 + 30);
-    buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(40, buffer.canvas.height / 2 - 30);
+  buffer.lineTo(40, buffer.canvas.height / 2 + 30);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(buffer.canvas.width - 40, buffer.canvas.height / 2 - 30);
+  buffer.lineTo(buffer.canvas.width - 40, buffer.canvas.height / 2 + 30);
+  buffer.stroke();
 }
 
 function draw_nocharge_circle() {
-    buffer.beginPath();
-    buffer.moveTo(40, buffer.canvas.height / 2 - 40);
-    buffer.lineTo(52.6, buffer.canvas.height / 2 - 40);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.moveTo(40, buffer.canvas.height / 2 + 40);
-    buffer.lineTo(52.6, buffer.canvas.height / 2 + 40);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.arc(
-        52.6,
-        buffer.canvas.height / 2,
-        40,
-        (Math.PI * 3) / 2,
-        (Math.PI * 5) / 2
-    );
-    buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(40, buffer.canvas.height / 2 - 40);
+  buffer.lineTo(52.6, buffer.canvas.height / 2 - 40);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(40, buffer.canvas.height / 2 + 40);
+  buffer.lineTo(52.6, buffer.canvas.height / 2 + 40);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.arc(
+    52.6,
+    buffer.canvas.height / 2,
+    40,
+    (Math.PI * 3) / 2,
+    (Math.PI * 5) / 2
+  );
+  buffer.stroke();
 
-    buffer.beginPath();
-    buffer.moveTo(buffer.canvas.width - 40, buffer.canvas.height / 2 - 40);
-    buffer.lineTo(buffer.canvas.width - 52.6, buffer.canvas.height / 2 - 40);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.moveTo(buffer.canvas.width - 40, buffer.canvas.height / 2 + 40);
-    buffer.lineTo(buffer.canvas.width - 52.6, buffer.canvas.height / 2 + 40);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.arc(
-        buffer.canvas.width - 52.6,
-        buffer.canvas.height / 2,
-        40,
-        Math.PI / 2,
-        (Math.PI * 3) / 2
-    );
-    buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(buffer.canvas.width - 40, buffer.canvas.height / 2 - 40);
+  buffer.lineTo(buffer.canvas.width - 52.6, buffer.canvas.height / 2 - 40);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(buffer.canvas.width - 40, buffer.canvas.height / 2 + 40);
+  buffer.lineTo(buffer.canvas.width - 52.6, buffer.canvas.height / 2 + 40);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.arc(
+    buffer.canvas.width - 52.6,
+    buffer.canvas.height / 2,
+    40,
+    Math.PI / 2,
+    (Math.PI * 3) / 2
+  );
+  buffer.stroke();
 }
 
-const bballDOM = document.querySelector('#basketball');
+const bballDOM = document.querySelector("#basketball");
 console.log(bballDOM);
 
 function draw_bball() {
-    // buffer.drawImage(image, 0, 0, 860, 907, bball.x - 15, bball.y - 15, 30, 30);
+  let position = convertToWindowCoord(new Vector2(bball.x - 129, bball.y - 63));
+
+  bballDOM.style.transform =
+    "translate(" + position.x + "px, " + position.y + "px)";
 }
 
-function draw_threepointline() {
-    buffer.beginPath();
-    buffer.moveTo(0, 30);
-    buffer.lineTo(140, 30);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.moveTo(0, buffer.canvas.height - 30);
-    buffer.lineTo(140, buffer.canvas.height - 30);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.arc(
-        55,
-        buffer.canvas.height / 2,
-        236,
-        Math.atan2(-220, 140 - 56),
-        Math.atan2(220, 140 - 56)
-    );
-    buffer.stroke();
+// buffer.drawImage(image, 0, 0, 860, 907, bball.x - 15, bball.y - 15, 30, 30);
 
-    buffer.beginPath();
-    buffer.moveTo(buffer.canvas.width - 140, 30);
-    buffer.lineTo(buffer.canvas.width, 30);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.moveTo(buffer.canvas.width - 140, buffer.canvas.height - 30);
-    buffer.lineTo(buffer.canvas.width, buffer.canvas.height - 30);
-    buffer.stroke();
-    buffer.arc(
-        buffer.canvas.width - 55,
-        buffer.canvas.height / 2,
-        235.8,
-        Math.atan2(220, -140 + 57),
-        Math.atan2(-220, -140 + 57)
-    );
-    buffer.stroke();
+function draw_threepointline() {
+  buffer.beginPath();
+  buffer.moveTo(0, 30);
+  buffer.lineTo(140, 30);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(0, buffer.canvas.height - 30);
+  buffer.lineTo(140, buffer.canvas.height - 30);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.arc(
+    55,
+    buffer.canvas.height / 2,
+    236,
+    Math.atan2(-220, 140 - 56),
+    Math.atan2(220, 140 - 56)
+  );
+  buffer.stroke();
+
+  buffer.beginPath();
+  buffer.moveTo(buffer.canvas.width - 140, 30);
+  buffer.lineTo(buffer.canvas.width, 30);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(buffer.canvas.width - 140, buffer.canvas.height - 30);
+  buffer.lineTo(buffer.canvas.width, buffer.canvas.height - 30);
+  buffer.stroke();
+  buffer.arc(
+    buffer.canvas.width - 55,
+    buffer.canvas.height / 2,
+    235.8,
+    Math.atan2(220, -140 + 57),
+    Math.atan2(-220, -140 + 57)
+  );
+  buffer.stroke();
 }
 
 function draw_freethrowline() {
-    buffer.beginPath();
-    buffer.moveTo(0, 190);
-    buffer.lineTo(190, 190);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.moveTo(0, buffer.canvas.height - 190);
-    buffer.lineTo(190, buffer.canvas.height - 190);
-    buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(0, 190);
+  buffer.lineTo(190, 190);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(0, buffer.canvas.height - 190);
+  buffer.lineTo(190, buffer.canvas.height - 190);
+  buffer.stroke();
 
-    buffer.beginPath();
-    buffer.moveTo(buffer.canvas.width - 190, 190);
-    buffer.lineTo(buffer.canvas.width, 190);
-    buffer.stroke();
-    buffer.beginPath();
-    buffer.moveTo(buffer.canvas.width - 190, buffer.canvas.height - 190);
-    buffer.lineTo(buffer.canvas.width, buffer.canvas.height - 190);
-    buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(buffer.canvas.width - 190, 190);
+  buffer.lineTo(buffer.canvas.width, 190);
+  buffer.stroke();
+  buffer.beginPath();
+  buffer.moveTo(buffer.canvas.width - 190, buffer.canvas.height - 190);
+  buffer.lineTo(buffer.canvas.width, buffer.canvas.height - 190);
+  buffer.stroke();
 }
 
 function dashArc(context, numDashes, x, y, radius, startAngle, endAngle) {
-    let stepAngle = (endAngle - startAngle) / (2 * numDashes);
-    stepAngle = (endAngle + stepAngle - startAngle) / (2 * numDashes); // End in a dash
+  let stepAngle = (endAngle - startAngle) / (2 * numDashes);
+  stepAngle = (endAngle + stepAngle - startAngle) / (2 * numDashes); // End in a dash
 
-    for (i = 0; i < numDashes; i++) {
-        context.beginPath();
-        context.arc(
-            x,
-            y,
-            radius,
-            startAngle + stepAngle * (2 * i),
-            startAngle + stepAngle * (2 * i + 1)
-        );
-        context.stroke();
-    }
+  for (i = 0; i < numDashes; i++) {
+    context.beginPath();
+    context.arc(
+      x,
+      y,
+      radius,
+      startAngle + stepAngle * (2 * i),
+      startAngle + stepAngle * (2 * i + 1)
+    );
+    context.stroke();
+  }
 }
 
 function draw_freethrowcircle() {
-    buffer.beginPath();
-    buffer.arc(
-        190,
-        buffer.canvas.height / 2,
-        60,
-        (Math.PI * 3) / 2,
-        (Math.PI * 5) / 2
-    );
-    buffer.stroke();
-    dashArc(
-        buffer,
-        8,
-        190,
-        buffer.canvas.height / 2,
-        60,
-        Math.PI / 2,
-        (Math.PI * 3) / 2
-    );
+  buffer.beginPath();
+  buffer.arc(
+    190,
+    buffer.canvas.height / 2,
+    60,
+    (Math.PI * 3) / 2,
+    (Math.PI * 5) / 2
+  );
+  buffer.stroke();
+  dashArc(
+    buffer,
+    8,
+    190,
+    buffer.canvas.height / 2,
+    60,
+    Math.PI / 2,
+    (Math.PI * 3) / 2
+  );
 
-    buffer.beginPath();
-    buffer.arc(
-        buffer.canvas.width - 190,
-        buffer.canvas.height / 2,
-        60,
-        Math.PI / 2,
-        (Math.PI * 3) / 2
-    );
-    buffer.stroke();
-    dashArc(
-        buffer,
-        8,
-        buffer.canvas.width - 190,
-        buffer.canvas.height / 2,
-        60,
-        (Math.PI * 3) / 2,
-        (Math.PI * 5) / 2
-    );
+  buffer.beginPath();
+  buffer.arc(
+    buffer.canvas.width - 190,
+    buffer.canvas.height / 2,
+    60,
+    Math.PI / 2,
+    (Math.PI * 3) / 2
+  );
+  buffer.stroke();
+  dashArc(
+    buffer,
+    8,
+    buffer.canvas.width - 190,
+    buffer.canvas.height / 2,
+    60,
+    (Math.PI * 3) / 2,
+    (Math.PI * 5) / 2
+  );
 }
 
 function draw_key() {
-    buffer.strokeRect(0, 170, 190, 160);
-    buffer.strokeRect(buffer.canvas.width - 190, 170, 190, 160);
+  buffer.strokeRect(0, 170, 190, 160);
+  buffer.strokeRect(buffer.canvas.width - 190, 170, 190, 160);
 }
 
 function drawCourtLines() {
-    buffer.strokeStyle = 'black';
-    buffer.lineWidth = 10;
-    draw_sideline();
+  buffer.strokeStyle = "black";
+  buffer.lineWidth = 10;
+  draw_sideline();
 
-    buffer.lineWidth = 5;
-    draw_halfline();
-    draw_centercircle();
-    draw_threepointline();
-    draw_freethrowline();
-    draw_freethrowcircle();
-    draw_key();
+  buffer.lineWidth = 5;
+  draw_halfline();
+  draw_centercircle();
+  draw_threepointline();
+  draw_freethrowline();
+  draw_freethrowcircle();
+  draw_key();
 
-    buffer.lineWidth = 2;
-    draw_hoop();
-    draw_backboard();
-    draw_nocharge_circle();
+  buffer.lineWidth = 2;
+  draw_hoop();
+  draw_backboard();
+  draw_nocharge_circle();
 }
