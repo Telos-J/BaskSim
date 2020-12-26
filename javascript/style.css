@@ -49,10 +49,35 @@ body {
     position: absolute;
     transform: translate(2.2vw, 2vw);
     font-size: 1vw;
-    z-index: 1;
+    z-index: 2;
 }
 
-.ball {
+.purple .number {
     position: absolute;
-    width: 2rem;
+    transform: translate(2.2vw, 2vw);
+    font-size: 1vw;
+    z-index: 2;
+}
+
+.blob.flip {
+    transform: rotateY(180deg);
+}
+
+#basketball {
+    width: 2vw;
+    height: 2vw;
+}
+
+.st4 {
+    fill: none;
+    stroke: #45413c;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-miterlimit: 10;
+}
+.st32 {
+    fill: #ff8a14;
+}
+.st95 {
+    fill: #eb6d00;
 }

@@ -32,6 +32,11 @@ function generateTeam() {
         new Player('PF', 210, 107, 34, 'Giannis Antetokumpo', buffer.canvas.width - 88, 181, target2,pforwardAttribute),
         new Player('C', 216, 128, 54, 'Dwight Howard', buffer.canvas.width - 154, 341, target2,centerAttribute),
     ];
+    const team2DOM = document.querySelectorAll('.purple');
+    team2.forEach((player, index) => {
+        player.playerDOM = team2DOM[index];
+        setDOM(player.playerDOM, player);
+    });
 
     return [team1, team2];
 }

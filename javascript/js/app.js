@@ -55,7 +55,6 @@ class Player {
             ball.y = this.y;
         }
     }
-
     shoot(ball) {
         this.hasBall = false;
         ball.shooting = true;
@@ -116,7 +115,6 @@ const bball = {
     bounceoff() {
         this.bouncingoff = true;
         const angle = Math.random() * Math.PI + (Math.PI * 3) / 2;
-
         if (this.target.x > buffer.canvas.width / 2) {
             this.target.x = this.target.x - 80 * Math.cos(angle);
             this.target.y = this.target.y + 80 * Math.sin(angle);
@@ -212,7 +210,7 @@ function render() {
     drawBackground('#b86125');
     drawCourtLines();
     drawTeam(roster1, 'green');
-    // drawTeam(roster2, "purple");
+    drawTeam(roster2, 'purple');
     draw_bball();
     context.drawImage(
         buffer.canvas,

@@ -99,9 +99,10 @@ function draw_nocharge_circle() {
     buffer.stroke();
 }
 
+const bballDOM = document.querySelector('#basketball');
+console.log(bballDOM);
+
 function draw_bball() {
-    const image = new Image();
-    image.src = 'assets/bball_flat_icon.png';
     buffer.drawImage(image, 0, 0, 860, 907, bball.x - 15, bball.y - 15, 30, 30);
 }
 
