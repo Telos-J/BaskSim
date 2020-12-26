@@ -142,16 +142,14 @@ function update() {
     }
     if (buffer.canvas.width >= controlPlayer.x) {
         if (controller.right.active) {
-            controlPlayer.playerDOM
-                .querySelector('svg')
-                .classList.remove('flip');
+            controlPlayer.playerDOM.classList.remove('flip');
             controlPlayer.x += 5;
             controlPlayer.isMoving = true;
         }
     }
     if (0 < controlPlayer.x) {
         if (controller.left.active) {
-            controlPlayer.playerDOM.querySelector('svg').classList.add('flip');
+            controlPlayer.playerDOM.classList.add('flip');
             controlPlayer.x -= 5;
             controlPlayer.isMoving = true;
         }

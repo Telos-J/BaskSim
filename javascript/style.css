@@ -41,27 +41,21 @@ body {
     height: 5vw;
 }
 
-.blob.flip {
-    transform: rotateY(180deg) translateX(2vw);
+.flip svg {
+    transform: rotateY(180deg);
 }
 
-.green .number {
+.number {
     position: absolute;
-    transform: translate(2.2vw, 2vw);
-    font-size: 1vw;
-    z-index: 2;
-}
-
-.purple .number {
-    position: absolute;
-    transform: translate(2.2vw, 2vw);
+    transform: translate(2.2vw, -1vw);
     font-size: 1vw;
     z-index: 2;
 }
 
 #basketball {
-    width: 2vw;
-    height: 2vw;
+    position: absolute;
+    width: 2.5vw;
+    height: 2.5vw;
 }
 
 .st4 {
