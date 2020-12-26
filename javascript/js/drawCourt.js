@@ -103,7 +103,7 @@ const bballDOM = document.querySelector('#basketball');
 console.log(bballDOM);
 
 function draw_bball() {
-    buffer.drawImage(image, 0, 0, 860, 907, bball.x - 15, bball.y - 15, 30, 30);
+    // buffer.drawImage(image, 0, 0, 860, 907, bball.x - 15, bball.y - 15, 30, 30);
 }
 
 function draw_threepointline() {
