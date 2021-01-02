@@ -128,80 +128,26 @@ const bball = {
 function update() {
     controlPlayer.wasMoving = controlPlayer.isMoving;
 
-    if (buffer.canvas.height >= controlPlayer.y) {
-        if (controller.down.active) {
-            controlPlayer.y += 5;
-            controlPlayer.isMoving = true;
-        } else controlPlayer.isMoving = false;
-    }
-    if (0 < controlPlayer.y) {
-        if (controller.up.active) {
-            controlPlayer.y -= 5;
-            controlPlayer.isMoving = true;
-        }
-    }
-    if (buffer.canvas.width >= controlPlayer.x) {
-        if (controller.right.active) {
-            controlPlayer.playerDOM.classList.remove('flip');
-            controlPlayer.x += 5;
-            controlPlayer.isMoving = true;
-        }
-    }
-    if (0 < controlPlayer.x) {
-        if (controller.left.active) {
-            controlPlayer.playerDOM.classList.add('flip');
-            controlPlayer.x -= 5;
-            controlPlayer.isMoving = true;
-        }
-    }
-    if (controller.space.active && controlPlayer.hasBall)
-        controlPlayer.shoot(bball);
-    if (
-        !controller.left.active &&
-        !controller.down.active &&
-        !controller.up.active &&
-        !controller.right.active
-    )
-        controlPlayer.isMoving = false;
+    control()
 
     if (!controlPlayer.wasMoving && controlPlayer.isMoving) {
         const paths = Array.from(
             controlPlayer.playerDOM.querySelectorAll('path')
         );
-        walkAnimation(paths);
+        controlPlayer.playerDOM.querySelector('#dribbleBall').style.display = "block"
+        dribbleAnimation(paths)
+        // walkAnimation(paths);
     } else if (controlPlayer.wasMoving && !controlPlayer.isMoving) {
         const paths = Array.from(
             controlPlayer.playerDOM.querySelectorAll('path')
         );
+        controlPlayer.playerDOM.querySelector('#dribbleBall').style.display = "none"
         idleAnimation(paths);
     }
 
     controlPlayer.grabBall(bball);
 
-    if (bball.shooting) {
-        bball.move();
-        if (bball.reachTarget()) {
-            bball.shooting = false;
-
-            if (bball.isGoal()) {
-                bball.makeGoal();
-                controlPlayer.updateStat({
-                    goal: true,
-                    ball_probablity: bball.probability,
-                });
-            } else {
-                bball.bounceoff();
-                controlPlayer.updateStat({
-                    goal: false,
-                });
-            }
-        }
-    } else if (bball.bouncingoff) {
-        bball.move();
-        if (bball.reachTarget()) {
-            bball.bouncingoff = false;
-        }
-    }
+    handleBallActivity()
 }
 
 function render() {

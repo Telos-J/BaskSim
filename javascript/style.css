@@ -58,6 +58,10 @@ body {
     height: 2.5vw;
 }
 
+#dribbleBall {
+    display: none;
+}
+
 .st4 {
     fill: none;
     stroke: #45413c;

@@ -89,3 +89,68 @@ function drawTeam(team, color) {
             'translate(' + position.x + 'px, ' + position.y + 'px)';
     });
 }
+
+function control() {
+    if (buffer.canvas.height >= controlPlayer.y) {
+        if (controller.down.active) {
+            controlPlayer.y += 5;
+            controlPlayer.isMoving = true;
+        } else controlPlayer.isMoving = false;
+    }
+    if (0 < controlPlayer.y) {
+        if (controller.up.active) {
+            controlPlayer.y -= 5;
+            controlPlayer.isMoving = true;
+        }
+    }
+    if (buffer.canvas.width >= controlPlayer.x) {
+        if (controller.right.active) {
+            controlPlayer.playerDOM.classList.remove('flip');
+            controlPlayer.x += 5;
+            controlPlayer.isMoving = true;
+        }
+    }
+    if (0 < controlPlayer.x) {
+        if (controller.left.active) {
+            controlPlayer.playerDOM.classList.add('flip');
+            controlPlayer.x -= 5;
+            controlPlayer.isMoving = true;
+        }
+    }
+    if (controller.space.active && controlPlayer.hasBall)
+        controlPlayer.shoot(bball);
+    if (
+        !controller.left.active &&
+        !controller.down.active &&
+        !controller.up.active &&
+        !controller.right.active
+    )
+        controlPlayer.isMoving = false;
+}
+
+function handleBallActivity() {
+    if (bball.shooting) {
+        bball.move();
+        if (bball.reachTarget()) {
+            bball.shooting = false;
+
+            if (bball.isGoal()) {
+                bball.makeGoal();
+                controlPlayer.updateStat({
+                    goal: true,
+                    ball_probablity: bball.probability,
+                });
+            } else {
+                bball.bounceoff();
+                controlPlayer.updateStat({
+                    goal: false,
+                });
+            }
+        }
+    } else if (bball.bouncingoff) {
+        bball.move();
+        if (bball.reachTarget()) {
+            bball.bouncingoff = false;
+        }
+    }
+}
