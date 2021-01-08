@@ -62,6 +62,10 @@ body {
     display: none;
 }
 
+.morphTo {
+    display: none;
+}
+
 .st4 {
     fill: none;
     stroke: #45413c;

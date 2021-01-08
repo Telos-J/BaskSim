@@ -83,10 +83,6 @@ const resize = function () {
     canvas.height = height * scale;
 };
 
-const handleMouseMove = function (event) {
-    mousePos = convertToBufferCoord(new Vector2(event.clientX, event.clientY));
-};
-
 const convertToBufferCoord = function (vector) {
     return new Vector2(
         ((vector.x - canvas.offsetLeft) /
@@ -109,4 +105,3 @@ const convertToWindowCoord = function (vector) {
     );
 };
 
-let mousePos = new Vector2();

@@ -1,5 +1,29 @@
+const idle = document.querySelector(".blob");
+const idle_paths = Array.from(idle.querySelectorAll('path'));
+const idle2 = document.querySelector("#idle2");
+const idle2_paths = Array.from(idle2.querySelectorAll('path'));
+
+const walk = document.querySelector("#walk");
+const walk_paths = Array.from(walk.querySelectorAll('path'));
+const walk2 = document.querySelector("#walk2");
+const walk2_paths = Array.from(walk2.querySelectorAll('path'));
+const walk3 = document.querySelector("#walk3");
+const walk3_paths = Array.from(walk3.querySelectorAll('path'));
+const walk4 = document.querySelector("#walk4");
+const walk4_paths = Array.from(walk4.querySelectorAll('path'));
+
+const dribble = document.querySelector("#dribble");
+const dribble_paths = Array.from(dribble.querySelectorAll('path'));
+const dribble2 = document.querySelector("#dribble2");
+const dribble2_paths = Array.from(dribble2.querySelectorAll('path'));
+const dribble3 = document.querySelector("#dribble3");
+const dribble3_paths = Array.from(dribble3.querySelectorAll('path'));
+const dribble4 = document.querySelector("#dribble4");
+const dribble4_paths = Array.from(dribble4.querySelectorAll('path'));
+
 function idleAnimation(paths) {
     paths.map(function (item, idx) {
+        gsap.killTweensOf(item)
         gsap.fromTo(
             item,
             {
@@ -17,14 +41,16 @@ function idleAnimation(paths) {
 
 function walkAnimation(paths) {
     paths.map(function (item, idx) {
+        let shapeIndex = 'auto';
+        const timeline = gsap.timeline({ repeat: -1 });
+
         if (idx == 0) {
             shapeIndex = 10;
-        } else if (idx == 4 || idx == 1 || idx == 7) {
+        } else if (idx == 1 || idx == 4 || idx == 5) {
             shapeIndex = 0;
-        } else {
-            shapeIndex = 'auto';
         }
-        const timeline = gsap.timeline({ repeat: -1 });
+
+        gsap.killTweensOf(item)
         timeline
             .fromTo(
                 item,
@@ -69,14 +95,16 @@ function walkAnimation(paths) {
 
 function dribbleAnimation(paths) {
     paths.map(function (item, idx) {
+        let shapeIndex = 'auto'
+        const timeline = gsap.timeline({ repeat: -1 });
+
         if (idx == 0) {
             shapeIndex = 10;
-        } else if (idx == 4 || idx == 1 || idx == 7) {
+        } else if (idx == 1 || idx == 4 || idx == 5) {
             shapeIndex = 0;
-        } else {
-            shapeIndex = 'auto';
         }
-        const timeline = gsap.timeline({ repeat: -1 });
+
+        gsap.killTweensOf(item)
         timeline
             .fromTo(
                 item,
@@ -118,3 +146,5 @@ function dribbleAnimation(paths) {
             });
     });
 }
+
+export { idleAnimation, walkAnimation, dribbleAnimation }

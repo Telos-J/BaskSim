@@ -99,16 +99,6 @@ function draw_nocharge_circle() {
     buffer.stroke();
 }
 
-const bballDOM = document.querySelector('#basketball');
-
-function draw_bball() {
-    let position = convertToWindowCoord(
-        new Vector2(bball.x - 15, bball.y - 15)
-    );
-
-    bballDOM.style.transform =
-        'translate(' + position.x + 'px, ' + position.y + 'px)';
-}
 
 function draw_threepointline() {
     buffer.beginPath();
@@ -171,7 +161,7 @@ function dashArc(context, numDashes, x, y, radius, startAngle, endAngle) {
     let stepAngle = (endAngle - startAngle) / (2 * numDashes);
     stepAngle = (endAngle + stepAngle - startAngle) / (2 * numDashes); // End in a dash
 
-    for (i = 0; i < numDashes; i++) {
+    for (let i = 0; i < numDashes; i++) {
         context.beginPath();
         context.arc(
             x,
@@ -247,3 +237,5 @@ function drawCourtLines() {
     draw_backboard();
     draw_nocharge_circle();
 }
+
+export { drawBackground, drawCourtLines }
