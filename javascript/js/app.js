@@ -9,6 +9,7 @@ function update() {
   controlPlayer.dribble(bball);
 
   updateBallActivity(bball, controlPlayer);
+  console.log(controlPlayer.isMoving, controlPlayer.wasMoving)
 }
 
 function render() {

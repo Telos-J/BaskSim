@@ -46,9 +46,10 @@ class Player {
     const distance = Math.hypot(this.x - ball.x, this.y - ball.y);
     if (distance < ball.size && !ball.shooting && !this.hasBall) {
       this.hasBall = true;
-      const paths = Array.from(this.playerDOM.querySelectorAll("path"));
       this.playerDOM.querySelector("#dribbleBall").style.display = "block";
-      dribbleAnimation(paths);
+      const paths = Array.from(this.playerDOM.querySelectorAll("path"));
+      if (this.isMoving) dribbleAnimation(paths);
+      else idleDribbleAnimation(paths);
     }
     if (this.hasBall) {
       ball.x = this.x;
@@ -57,23 +58,21 @@ class Player {
   }
 
   shoot(ball) {
+    const distHoop = Math.hypot(this.x - this.target.x, this.y - this.target.y);
+    const character = this.playerDOM.querySelector('#character')
+    const paths = Array.from(character.querySelectorAll("path"));
+
     this.hasBall = false;
     ball.shooting = true;
     ball.target.x = this.target.x;
     ball.target.y = this.target.y;
-    const distHoop = Math.hypot(this.x - this.target.x, this.y - this.target.y);
+
     if (distHoop > 235.8) ball.probability = this.attribute.shoot3;
     else ball.probability = this.attribute.shoot;
-    const character = this.playerDOM.querySelector('#character')
-    const paths = Array.from(character.querySelectorAll("path"));
-    this.playerDOM.querySelector("#dribbleBall").style.display =
-      "none";
-    if (this.isMoving) {
-      walkAnimation(paths)
-    }
-    else {
-      idleAnimation(paths)
-    }
+
+    this.playerDOM.querySelector("#dribbleBall").style.display = "none";
+    if (this.isMoving) walkAnimation(paths)
+    else idleAnimation(paths)
   }
 
   updateStat({ goal = true, bball_probability }) {

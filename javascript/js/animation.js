@@ -54,6 +54,7 @@ function idleDribbleAnimation(paths) {
       },
       {
         duration: 0.25,
+        ease: "none",
         repeat: -1,
         yoyo: true,
         morphSVG: idleDribble2_paths[idx],
