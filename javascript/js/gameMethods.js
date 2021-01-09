@@ -1,5 +1,5 @@
 import { Player, Attribute, Team, bball } from './gameObjects.js'
-import { idleAnimation, walkAnimation, dribbleAnimation } from './animation.js'
+import { idleAnimation, idleDribbleAnimation, walkAnimation, dribbleAnimation } from './animation.js'
 
 function setPlayerBackNumber(player) {
     player.playerDOM.getElementsByClassName('number')[0].innerHTML = 
@@ -165,9 +165,14 @@ function animate(controlPlayer) {
   if (!controlPlayer.wasMoving && controlPlayer.isMoving) {
     walkAnimation(paths);
   } else if (controlPlayer.wasMoving && !controlPlayer.isMoving) {
-    controlPlayer.playerDOM.querySelector("#dribbleBall").style.display =
+    if (controlPlayer.hasBall) {
+        idleDribbleAnimation(Array.from(controlPlayer.playerDOM.querySelectorAll("path")))
+    }
+    else {
+        controlPlayer.playerDOM.querySelector("#dribbleBall").style.display =
       "none";
-    idleAnimation(paths);
+        idleAnimation(paths)
+    }
   }
 }
 

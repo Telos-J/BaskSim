@@ -1,4 +1,4 @@
-import { dribbleAnimation } from './animation.js'
+import { idleDribbleAnimation, dribbleAnimation } from "./animation.js";
 
 class Attribute {
   constructor(shoot, shoot3, defence, stamina, speed) {
@@ -9,7 +9,6 @@ class Attribute {
     this.speed = speed;
   }
 }
-
 
 class Player {
   constructor(
@@ -47,11 +46,8 @@ class Player {
     const distance = Math.hypot(this.x - ball.x, this.y - ball.y);
     if (distance < ball.size && !ball.shooting && !this.hasBall) {
       this.hasBall = true;
-      const paths = Array.from(
-        this.playerDOM.querySelectorAll("path")
-      );
-      this.playerDOM.querySelector("#dribbleBall").style.display =
-        "block";
+      const paths = Array.from(this.playerDOM.querySelectorAll("path"));
+      this.playerDOM.querySelector("#dribbleBall").style.display = "block";
       dribbleAnimation(paths);
     }
     if (this.hasBall) {
@@ -86,8 +82,8 @@ class Player {
 
 class Team {
   constructor(players, color) {
-    this.players = players
-    this.color = color
+    this.players = players;
+    this.color = color;
   }
 }
 
@@ -134,4 +130,4 @@ const bball = {
   },
 };
 
-export { Player, Attribute, Team, bball }
+export { Player, Attribute, Team, bball };
