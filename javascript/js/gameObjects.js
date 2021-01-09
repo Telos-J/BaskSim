@@ -48,6 +48,7 @@ class Player {
       this.hasBall = true;
       this.playerDOM.querySelector("#dribbleBall").style.display = "block";
       const paths = Array.from(this.playerDOM.querySelectorAll("path"));
+      document.querySelector('#basketball').style.display = 'none';
       if (this.isMoving) dribbleAnimation(paths);
       else idleDribbleAnimation(paths);
     }
@@ -70,6 +71,7 @@ class Player {
     if (distHoop > 235.8) ball.probability = this.attribute.shoot3;
     else ball.probability = this.attribute.shoot;
 
+    document.querySelector('#basketball').style.display = 'block';
     this.playerDOM.querySelector("#dribbleBall").style.display = "none";
     if (this.isMoving) walkAnimation(paths)
     else idleAnimation(paths)

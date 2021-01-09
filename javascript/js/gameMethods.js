@@ -164,10 +164,16 @@ function animate(controlPlayer) {
   const fullPaths = Array.from(controlPlayer.playerDOM.querySelectorAll("path"))
 
   if (!controlPlayer.wasMoving && controlPlayer.isMoving) {
-    if (controlPlayer.hasBall) dribbleAnimation(fullPaths)
+    if (controlPlayer.hasBall) {
+        document.querySelector('#basketball').style.display = 'none';
+        dribbleAnimation(fullPaths)
+    }
     else walkAnimation(paths);
   } else if (controlPlayer.wasMoving && !controlPlayer.isMoving) {
-    if (controlPlayer.hasBall) idleDribbleAnimation(fullPaths)
+    if (controlPlayer.hasBall) {
+        document.querySelector('#basketball').style.display = 'none';
+        idleDribbleAnimation(fullPaths)
+    }
     else {
         controlPlayer.playerDOM.querySelector("#dribbleBall").style.display = "none";
         idleAnimation(paths)
