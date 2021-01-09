@@ -163,7 +163,12 @@ function animate(controlPlayer) {
   const paths = Array.from(character.querySelectorAll("path"));
 
   if (!controlPlayer.wasMoving && controlPlayer.isMoving) {
+    if (controlPlayer.hasBall) {
+        dribbleAnimation(Array.from(controlPlayer.playerDOM.querySelectorAll("path")))
+    }
+    else {
     walkAnimation(paths);
+    }
   } else if (controlPlayer.wasMoving && !controlPlayer.isMoving) {
     if (controlPlayer.hasBall) {
         idleDribbleAnimation(Array.from(controlPlayer.playerDOM.querySelectorAll("path")))

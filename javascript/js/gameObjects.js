@@ -1,4 +1,4 @@
-import { idleDribbleAnimation, dribbleAnimation } from "./animation.js";
+import { idleDribbleAnimation, dribbleAnimation, walkAnimation, idleAnimation } from "./animation.js";
 
 class Attribute {
   constructor(shoot, shoot3, defence, stamina, speed) {
@@ -64,6 +64,16 @@ class Player {
     const distHoop = Math.hypot(this.x - this.target.x, this.y - this.target.y);
     if (distHoop > 235.8) ball.probability = this.attribute.shoot3;
     else ball.probability = this.attribute.shoot;
+    const character = this.playerDOM.querySelector('#character')
+    const paths = Array.from(character.querySelectorAll("path"));
+    this.playerDOM.querySelector("#dribbleBall").style.display =
+      "none";
+    if (this.isMoving) {
+      walkAnimation(paths)
+    }
+    else {
+      idleAnimation(paths)
+    }
   }
 
   updateStat({ goal = true, bball_probability }) {
