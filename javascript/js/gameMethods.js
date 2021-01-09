@@ -161,21 +161,15 @@ function control(controlPlayer) {
 function animate(controlPlayer) {
   const character = controlPlayer.playerDOM.querySelector('#character')
   const paths = Array.from(character.querySelectorAll("path"));
+  const fullPaths = Array.from(controlPlayer.playerDOM.querySelectorAll("path"))
 
   if (!controlPlayer.wasMoving && controlPlayer.isMoving) {
-    if (controlPlayer.hasBall) {
-        dribbleAnimation(Array.from(controlPlayer.playerDOM.querySelectorAll("path")))
-    }
-    else {
-    walkAnimation(paths);
-    }
+    if (controlPlayer.hasBall) dribbleAnimation(fullPaths)
+    else walkAnimation(paths);
   } else if (controlPlayer.wasMoving && !controlPlayer.isMoving) {
-    if (controlPlayer.hasBall) {
-        idleDribbleAnimation(Array.from(controlPlayer.playerDOM.querySelectorAll("path")))
-    }
+    if (controlPlayer.hasBall) idleDribbleAnimation(fullPaths)
     else {
-        controlPlayer.playerDOM.querySelector("#dribbleBall").style.display =
-      "none";
+        controlPlayer.playerDOM.querySelector("#dribbleBall").style.display = "none";
         idleAnimation(paths)
     }
   }
