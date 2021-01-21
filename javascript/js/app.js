@@ -1,5 +1,5 @@
 import { bball } from './gameObjects.js'
-import { generateTeam, control, animate, updateBallActivity, drawTeam, draw_bball } from './gameMethods.js'
+import { generateTeam, control, animate, updateBallActivity, drawTeam, draw_bball, updateScore } from './gameMethods.js'
 import { drawBackground, drawCourtLines } from './drawCourt.js'
 
 function update() {
@@ -9,7 +9,7 @@ function update() {
   controlPlayer.dribble(bball);
 
   updateBallActivity(bball, controlPlayer);
-  console.log(controlPlayer.isMoving, controlPlayer.wasMoving)
+  updateScore()
 }
 
 function render() {

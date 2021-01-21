@@ -79,3 +79,19 @@ body {
 .st95 {
     fill: #eb6d00;
 }
+
+.scoreboard {
+    background-image: url('./assets/scoreboard.png');
+    background-size: cover;
+    position: absolute;
+    width: 40vw;
+    height: 6vw;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-around;
+}
+
+.score {
+    font-size: 3rem;
+}

@@ -208,4 +208,9 @@ function updateBallActivity(bball, controlPlayer) {
     }
 }
 
-export { generateTeam, control, animate, updateBallActivity, drawTeam, draw_bball }
+function updateScore() {
+    document.querySelector('#green-score').innerHTML = 10;
+    document.querySelector('#purple-score').innerHTML = 10;
+}
+
+export { generateTeam, control, animate, updateBallActivity, drawTeam, draw_bball, updateScore }
