@@ -1,4 +1,9 @@
-import { idleDribbleAnimation, dribbleAnimation, walkAnimation, idleAnimation } from "./animation.js";
+import {
+  idleDribbleAnimation,
+  dribbleAnimation,
+  walkAnimation,
+  idleAnimation,
+} from "./animation.js";
 
 class Attribute {
   constructor(shoot, shoot3, defence, stamina, speed) {
@@ -48,7 +53,7 @@ class Player {
       this.hasBall = true;
       this.playerDOM.querySelector("#dribbleBall").style.display = "block";
       const paths = Array.from(this.playerDOM.querySelectorAll("path"));
-      document.querySelector('#basketball').style.display = 'none';
+      document.querySelector("#basketball").style.display = "none";
       if (this.isMoving) dribbleAnimation(paths);
       else idleDribbleAnimation(paths);
     }
@@ -60,7 +65,7 @@ class Player {
 
   shoot(ball) {
     const distHoop = Math.hypot(this.x - this.target.x, this.y - this.target.y);
-    const character = this.playerDOM.querySelector('#character')
+    const character = this.playerDOM.querySelector("#character");
     const paths = Array.from(character.querySelectorAll("path"));
 
     this.hasBall = false;
@@ -71,17 +76,22 @@ class Player {
     if (distHoop > 235.8) ball.probability = this.attribute.shoot3;
     else ball.probability = this.attribute.shoot;
 
-    document.querySelector('#basketball').style.display = 'block';
+    document.querySelector("#basketball").style.display = "block";
     this.playerDOM.querySelector("#dribbleBall").style.display = "none";
-    if (this.isMoving) walkAnimation(paths)
-    else idleAnimation(paths)
+    if (this.isMoving) walkAnimation(paths);
+    else idleAnimation(paths);
   }
 
   updateStat({ goal = true, bball_probability }) {
     this.attempt += 1;
     if (goal) {
-      if (bball_probability == this.attribute.shoot3) this.score += 3;
-      else this.score += 2;
+      if (bball_probability == this.attribute.shoot3) {
+        this.score += 3;
+        this.team.score += 3;
+      } else {
+        this.score += 2;
+        this.team.score += 2;
+      }
 
       this.goals += 1;
     }
@@ -95,6 +105,7 @@ class Team {
   constructor(players, color) {
     this.players = players;
     this.color = color;
+    this.score = 0;
   }
 }
 

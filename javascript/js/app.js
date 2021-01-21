@@ -1,6 +1,14 @@
-import { bball } from './gameObjects.js'
-import { generateTeam, control, animate, updateBallActivity, drawTeam, draw_bball, updateScore } from './gameMethods.js'
-import { drawBackground, drawCourtLines } from './drawCourt.js'
+import { bball } from "./gameObjects.js";
+import {
+  generateTeam,
+  control,
+  animate,
+  updateBallActivity,
+  drawTeam,
+  draw_bball,
+  updateScore,
+} from "./gameMethods.js";
+import { drawBackground, drawCourtLines } from "./drawCourt.js";
 
 function update() {
   control(controlPlayer);
@@ -9,7 +17,7 @@ function update() {
   controlPlayer.dribble(bball);
 
   updateBallActivity(bball, controlPlayer);
-  updateScore()
+  updateScore(roster1, roster2);
 }
 
 function render() {
@@ -32,13 +40,13 @@ function render() {
 }
 
 const [roster1, roster2] = generateTeam();
-const players = roster1.players.concat(roster2.players)
+const players = roster1.players.concat(roster2.players);
 
 let controlPlayer = roster1.players[0];
 
 for (const player of players) {
-  player.playerDOM.addEventListener('click', () => {
-      controlPlayer = player;
+  player.playerDOM.addEventListener("click", () => {
+    controlPlayer = player;
   });
 }
 
