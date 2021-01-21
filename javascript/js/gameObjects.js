@@ -82,7 +82,7 @@ class Player {
     else idleAnimation(paths);
   }
 
-  updateStat({ goal = true, bball_probability }) {
+  updateStat({ goal, bball_probability }) {
     this.attempt += 1;
     if (goal) {
       if (bball_probability == this.attribute.shoot3) {
