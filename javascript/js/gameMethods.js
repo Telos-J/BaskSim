@@ -276,8 +276,7 @@ function animate(controlPlayer) {
   if (!controlPlayer.wasMoving && controlPlayer.isMoving) {
     if (controlPlayer.hasBall) {
       document.querySelector("#basketball").style.display = "none";
-      //dribbleAnimation(fullPaths);
-      shootAnimation(fullPaths);
+      dribbleAnimation(fullPaths);
     } else walkAnimation(paths);
   } else if (controlPlayer.wasMoving && !controlPlayer.isMoving) {
     if (controlPlayer.hasBall) {

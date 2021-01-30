@@ -182,10 +182,10 @@ function dribbleAnimation(paths) {
   });
 }
 
-function shootAnimation(paths) {
+function shootAnimation(paths, player) {
   paths.map(function (item, idx) {
     let shapeIndex = "auto";
-    const timeline = gsap.timeline({ repeat: -1 });
+    const timeline = gsap.timeline();
 
     if (idx == 0) {
       shapeIndex = 10;
@@ -240,6 +240,11 @@ function shootAnimation(paths) {
           shape: shoot_paths[idx],
           shapeIndex: shapeIndex,
         },
+        onComplete: function() {
+          idleAnimation(paths);
+          player.isShooting = false;
+          player.isMoving = false;
+        }
       });
   });
 }

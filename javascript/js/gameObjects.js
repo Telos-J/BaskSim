@@ -3,6 +3,7 @@ import {
   dribbleAnimation,
   walkAnimation,
   idleAnimation,
+  shootAnimation,
 } from "./animation.js";
 
 class Attribute {
@@ -45,6 +46,7 @@ class Player {
     this.framenum = 0;
     this.isMoving = false;
     this.wasMoving = false;
+    this.isShooting = false;
   }
 
   dribble(ball) {
@@ -66,9 +68,11 @@ class Player {
   shoot(ball) {
     const distHoop = Math.hypot(this.x - this.target.x, this.y - this.target.y);
     const character = this.playerDOM.querySelector("#character");
+    const fullPaths = Array.from(this.playerDOM.querySelectorAll("path"));
     const paths = Array.from(character.querySelectorAll("path"));
 
     this.hasBall = false;
+    this.isShooting = true;
     ball.shooting = true;
     ball.target.x = this.target.x;
     ball.target.y = this.target.y;
@@ -78,8 +82,9 @@ class Player {
 
     document.querySelector("#basketball").style.display = "block";
     this.playerDOM.querySelector("#dribbleBall").style.display = "none";
-    if (this.isMoving) walkAnimation(paths);
-    else idleAnimation(paths);
+    shootAnimation(fullPaths, this);
+    // if (this.isMoving) walkAnimation(paths);
+    // else idleAnimation(paths);
   }
 
   updateStat({ goal, bball_probability }) {
