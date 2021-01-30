@@ -26,6 +26,17 @@ const idleDribble_paths = Array.from(idleDribble.querySelectorAll("path"));
 const idleDribble2 = document.querySelector("#idleDribble2");
 const idleDribble2_paths = Array.from(idleDribble2.querySelectorAll("path"));
 
+const shoot = document.querySelector("#shoot");
+const shoot_paths = Array.from(shoot.querySelectorAll("path"));
+const shoot2 = document.querySelector("#shoot2");
+const shoot2_paths = Array.from(shoot2.querySelectorAll("path"));
+const shoot3 = document.querySelector("#shoot3");
+const shoot3_paths = Array.from(shoot3.querySelectorAll("path"));
+const shoot4 = document.querySelector("#shoot4");
+const shoot4_paths = Array.from(shoot4.querySelectorAll("path"));
+const shoot5 = document.querySelector("#shoot5");
+const shoot5_paths = Array.from(shoot5.querySelectorAll("path"));
+
 function idleAnimation(paths) {
   paths.map(function (item, idx) {
     gsap.killTweensOf(item);
@@ -171,4 +182,72 @@ function dribbleAnimation(paths) {
   });
 }
 
-export { idleAnimation, idleDribbleAnimation, walkAnimation, dribbleAnimation };
+function shootAnimation(paths) {
+  paths.map(function (item, idx) {
+    let shapeIndex = "auto";
+    const timeline = gsap.timeline({ repeat: -1 });
+
+    if (idx == 0) {
+      shapeIndex = 10;
+    } else if (idx == 1 || idx == 4 || idx == 5) {
+      shapeIndex = 0;
+    }
+
+    gsap.killTweensOf(item);
+    timeline
+      .fromTo(
+        item,
+        {
+          morphSVG: shoot_paths[idx],
+        },
+        {
+          duration: 0.2,
+          ease: "none",
+          morphSVG: {
+            shape: shoot2_paths[idx],
+            shapeIndex: shapeIndex,
+          },
+        }
+      )
+      .to(item, {
+        duration: 0.2,
+        ease: "none",
+        morphSVG: {
+          shape: shoot3_paths[idx],
+          shapeIndex: shapeIndex,
+        },
+      })
+      .to(item, {
+        duration: 0.2,
+        ease: "none",
+        morphSVG: {
+          shape: shoot4_paths[idx],
+          shapeIndex: shapeIndex,
+        },
+      })
+      .to(item, {
+        duration: 0.2,
+        ease: "none",
+        morphSVG: {
+          shape: shoot5_paths[idx],
+          shapeIndex: shapeIndex,
+        },
+      })
+      .to(item, {
+        duration: 0.2,
+        ease: "none",
+        morphSVG: {
+          shape: shoot_paths[idx],
+          shapeIndex: shapeIndex,
+        },
+      });
+  });
+}
+
+export {
+  idleAnimation,
+  idleDribbleAnimation,
+  walkAnimation,
+  dribbleAnimation,
+  shootAnimation,
+};
