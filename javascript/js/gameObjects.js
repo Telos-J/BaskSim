@@ -73,6 +73,9 @@ class Player {
 
     this.hasBall = false;
     this.isShooting = true;
+    if (this.target.x > canvas.width / 2) this.playerDOM.classList.remove("flip");
+    else this.playerDOM.classList.add("flip");
+
     ball.shooting = true;
     ball.target.x = this.target.x;
     ball.target.y = this.target.y;

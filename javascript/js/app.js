@@ -18,7 +18,6 @@ function update() {
 
   updateBallActivity(bball, controlPlayer);
   updateScore(roster1, roster2);
-  console.log(controlPlayer.isMoving, controlPlayer.wasMoving)
 }
 
 function render() {
