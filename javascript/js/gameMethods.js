@@ -53,6 +53,7 @@ function setPlayerDOM(player) {
   }
 
   if (player.target.x < buffer.canvas.width / 2) player.playerDOM.classList.add("flip");
+  player.playerDOM.style.zIndex = player.y;
 
   setPlayerBackNumber(player);
   setPlayerInitAnimations(player);
@@ -265,7 +266,9 @@ function control(controlPlayer) {
     !controller.up.active &&
     !controller.right.active
   )
+    
     controlPlayer.isMoving = false;
+    controlPlayer.playerDOM.style.zIndex = controlPlayer.y;
 }
 
 function animate(controlPlayer) {
