@@ -52,6 +52,8 @@ function setPlayerDOM(player) {
     player.playerDOM = clone;
   }
 
+  if (player.target.x < canvas.width / 2) player.playerDOM.classList.add("flip");
+
   setPlayerBackNumber(player);
   setPlayerInitAnimations(player);
   setPlayerDisplayDOMEvents(player);
