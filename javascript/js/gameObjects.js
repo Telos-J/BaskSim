@@ -76,9 +76,9 @@ class Player {
 
     this.hasBall = false;
     this.isShooting = true;
-    
-    
-    if (this.target.x < buffer.canvas.width / 2) this.playerDOM.classList.add("flip");
+
+    if (this.target.x < buffer.canvas.width / 2)
+      this.playerDOM.classList.add("flip");
     else this.playerDOM.classList.remove("flip");
 
     ball.shooting = true;
@@ -111,6 +111,50 @@ class Player {
     this.shootProb = this.goals / this.attempt;
     console.log("score: ", this.score);
     console.log("shootProb: ", this.shootProb);
+  }
+
+  control(bball) {
+    this.wasMoving = this.isMoving;
+    if (this.y > bball.y) {
+      this.y -= 5;
+      this.isMoving = true;
+    } else this.isMoving = false;
+    if (this.y < bball.y) {
+      this.y += 5;
+      this.isMoving = true;
+    }
+    if (this.x < bball.x) {
+      this.playerDOM.classList.remove("flip");
+      this.x += 5;
+      this.isMoving = true;
+    } else this.isMoving = false;
+    if (this.x > bball.x) {
+      this.playerDOM.classList.add("flip");
+      this.x -= 5;
+      this.isMoving = true;
+    }
+    // if (buffer.canvas.height >= this.y) {
+    //   this.y += 5;
+    //   this.isMoving = true;
+    // } else this.isMoving = false;
+
+    // if (0 < this.y) {
+    //   this.y -= 5;
+    //   this.isMoving = true;
+    // }
+    // if (buffer.canvas.width >= this.x) {
+    //   this.playerDOM.classList.remove("flip");
+    //   this.x += 5;
+    //   this.isMoving = true;
+    // } else this.isMoving = false;
+    // if (0 < this.x) {
+    //   this.playerDOM.classList.add("flip");
+    //   this.x -= 5;
+    //   this.isMoving = true;
+    // }
+    // if (controller.space.active && this.hasBall)
+    //   this.shoot(bball);
+    this.playerDOM.style.zIndex = this.y;
   }
 }
 
