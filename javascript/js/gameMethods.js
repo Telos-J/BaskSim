@@ -110,6 +110,7 @@ function generateTeam() {
         "Daanyal Graves",
         101,
         423,
+        target1,
         sforwardAttribute
       ),
       new Player(

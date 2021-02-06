@@ -11,13 +11,13 @@ import {
 import { drawBackground, drawCourtLines } from "./drawCourt.js";
 
 function update() {
-  if (!controlPlayer.isShooting) {
-    // control(controlPlayer);
-    for (const player of players) {
+  // control(controlPlayer);
+  for (const player of players) {
+    if (!player.isShooting) {
       player.control(bball);
+      player.dribble(bball);
+      animate(player);
     }
-    animate(controlPlayer);
-    controlPlayer.dribble(bball);
   }
   updateBallActivity(bball, controlPlayer, players);
   updateScore(roster1, roster2);

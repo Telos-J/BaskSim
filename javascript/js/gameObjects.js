@@ -85,6 +85,7 @@ class Player {
     ball.target.x = this.target.x;
     ball.target.y = this.target.y;
 
+    console.log(this)
     if (distHoop > 235.8) ball.probability = this.attribute.shoot3;
     else ball.probability = this.attribute.shoot;
 
@@ -115,24 +116,32 @@ class Player {
 
   control(bball) {
     this.wasMoving = this.isMoving;
-    if (this.y > bball.y) {
-      this.y -= 5;
-      this.isMoving = true;
-    } else this.isMoving = false;
-    if (this.y < bball.y) {
-      this.y += 5;
-      this.isMoving = true;
+    
+    if (!this.hasBall) {
+      const target = bball;
+      if (this.y > target.y) {
+        this.y -= 5;
+        this.isMoving = true;
+      } else this.isMoving = false;
+      if (this.y < target.y) {
+        this.y += 5;
+        this.isMoving = true;
+      }
+      if (this.x < target.x) {
+        this.playerDOM.classList.remove("flip");
+        this.x += 5;
+        this.isMoving = true;
+      }
+      if (this.x > target.x) {
+        this.playerDOM.classList.add("flip");
+        this.x -= 5;
+        this.isMoving = true;
+      }
     }
-    if (this.x < bball.x) {
-      this.playerDOM.classList.remove("flip");
-      this.x += 5;
-      this.isMoving = true;
-    } else this.isMoving = false;
-    if (this.x > bball.x) {
-      this.playerDOM.classList.add("flip");
-      this.x -= 5;
-      this.isMoving = true;
+    else {
+      this.shoot(bball)
     }
+
     // if (buffer.canvas.height >= this.y) {
     //   this.y += 5;
     //   this.isMoving = true;
