@@ -37,6 +37,7 @@ class Player {
     this.y = y;
     this.target = target;
     this.hasBall = false;
+    this.grabBall = false;
     this.attribute = attribute;
     this.attempt = 0;
     this.score = 0;
@@ -51,7 +52,9 @@ class Player {
 
   dribble(ball) {
     const distance = Math.hypot(this.x - ball.x, this.y - ball.y);
+    this.grabBall = false;
     if (distance < ball.size && !ball.shooting && !this.hasBall) {
+      this.grabBall = true;
       this.hasBall = true;
       this.playerDOM.querySelector("#dribbleBall").style.display = "block";
       const paths = Array.from(this.playerDOM.querySelectorAll("path"));
@@ -73,8 +76,10 @@ class Player {
 
     this.hasBall = false;
     this.isShooting = true;
-    if (this.target.x > canvas.width / 2) this.playerDOM.classList.remove("flip");
-    else this.playerDOM.classList.add("flip");
+    
+    
+    if (this.target.x < buffer.canvas.width / 2) this.playerDOM.classList.add("flip");
+    else this.playerDOM.classList.remove("flip");
 
     ball.shooting = true;
     ball.target.x = this.target.x;

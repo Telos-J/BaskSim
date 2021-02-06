@@ -52,7 +52,7 @@ function setPlayerDOM(player) {
     player.playerDOM = clone;
   }
 
-  if (player.target.x < canvas.width / 2) player.playerDOM.classList.add("flip");
+  if (player.target.x < buffer.canvas.width / 2) player.playerDOM.classList.add("flip");
 
   setPlayerBackNumber(player);
   setPlayerInitAnimations(player);
@@ -292,7 +292,22 @@ function animate(controlPlayer) {
   }
 }
 
-function updateBallActivity(bball, controlPlayer) {
+function updateBallActivity(bball, controlPlayer, players) {
+  if (controlPlayer.grabBall) {
+    for (const player of players) {
+      if (player !== controlPlayer && player.hasBall) {
+        const character = player.playerDOM.querySelector("#character");
+        const bballDOM = player.playerDOM.querySelector("#dribbleBall");
+        const paths = Array.from(character.querySelectorAll("path"));
+        player.hasBall = false;
+        bballDOM.style.display = "none"; 
+        
+        if (player.isMoving) walkAnimation(paths)
+        else idleAnimation(paths)
+      }
+    }
+  }
+  
   if (bball.shooting) {
     bball.move();
     if (bball.reachTarget()) {
@@ -322,7 +337,9 @@ function updateBallActivity(bball, controlPlayer) {
 function updateScore(team1, team2) {
   document.querySelector("#green-score").innerHTML = team1.score;
   document.querySelector("#purple-score").innerHTML = team2.score;
+
 }
+
 
 export {
   generateTeam,
