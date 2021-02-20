@@ -48,6 +48,7 @@ class Player {
     this.isMoving = false;
     this.wasMoving = false;
     this.isShooting = false;
+    this.range = 100;
   }
 
   dribble(ball) {
@@ -127,6 +128,21 @@ class Player {
     }
 
     this.playerDOM.style.zIndex = this.position.y;
+  }
+  
+  drawNeighborhood() {
+    buffer.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    buffer.beginPath();
+    buffer.arc(this.position.x, this.position.y, this.range, 0, Math.PI * 2);
+    buffer.fill();
+  }
+  
+  avoid(players) {
+    for (let player of players) {
+      if (!this.team.players.includes(player)) {
+        console.log(player)
+      }
+    }
   }
 }
 

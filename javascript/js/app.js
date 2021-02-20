@@ -22,6 +22,7 @@ function update() {
   updateBallActivity(bball, controlPlayer, players);
   updateScore(roster1, roster2);
   // console.log(controlPlayer.position)
+  controlPlayer.avoid(players);
 }
 
 function render() {
@@ -30,6 +31,7 @@ function render() {
   drawTeam(roster1, "green");
   drawTeam(roster2, "purple");
   draw_bball();
+  controlPlayer.drawNeighborhood();
   context.drawImage(
     buffer.canvas,
     0,
