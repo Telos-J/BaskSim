@@ -14,6 +14,7 @@ function update() {
   // control(controlPlayer);
   for (const player of players) {
     if (!player.isShooting) {
+      player.avoid(players);
       player.control(bball);
       player.dribble(bball);
       animate(player);
@@ -22,7 +23,6 @@ function update() {
   updateBallActivity(bball, controlPlayer, players);
   updateScore(roster1, roster2);
   // console.log(controlPlayer.position)
-  controlPlayer.avoid(players);
 }
 
 function render() {

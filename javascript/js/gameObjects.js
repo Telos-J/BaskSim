@@ -35,6 +35,7 @@ class Player {
     this.name = name;
     this.position = new Vector2(x, y);
     this.velocity = new Vector2();
+    this.avoidance = new Vector2();
     this.target = target;
     this.hasBall = false;
     this.grabBall = false;
@@ -118,14 +119,19 @@ class Player {
     if (!this.hasBall) {
       this.velocity = bball.position.sub(this.position).normalize(5)
       this.position = this.position.add(this.velocity)
-
       this.isMoving = true;
-      if (this.position.x < bball.position.x) this.playerDOM.classList.remove("flip");
-      else this.playerDOM.classList.add("flip");
     }
     else {
-      this.shoot(bball)
+      if (this.avoidance.magnitude()) { 
+        this.position = this.position.add(this.avoidance)
+        this.isMoving = true;
+      }
+      else this.isMoving = false; 
+      // this.shoot(bball)
     }
+
+    if (this.position.x < bball.position.x) this.playerDOM.classList.remove("flip");
+    else this.playerDOM.classList.add("flip");
 
     this.playerDOM.style.zIndex = this.position.y;
   }
@@ -137,12 +143,18 @@ class Player {
     buffer.fill();
   }
   
+  inNeighborhood(player) {
+    return player.position.sub(this.position).magnitude() < this.range;
+  }
+  
   avoid(players) {
+    let avoidance = new Vector2();
     for (let player of players) {
-      if (!this.team.players.includes(player)) {
-        console.log(player)
+      if (player.team.color !== this.team.color && this.inNeighborhood(player)) {
+        avoidance = avoidance.add(this.position.sub(player.position).normalize());
       }
     }
+    this.avoidance = avoidance.normalize(5);
   }
 }
 
