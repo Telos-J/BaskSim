@@ -33,8 +33,8 @@ class Player {
     this.weight = weight;
     this.back_number = back_number;
     this.name = name;
-    this.x = x;
-    this.y = y;
+    this.position = new Vector2(x, y);
+    this.velocity = new Vector2();
     this.target = target;
     this.hasBall = false;
     this.grabBall = false;
@@ -51,8 +51,9 @@ class Player {
   }
 
   dribble(ball) {
-    const distance = Math.hypot(this.x - ball.x, this.y - ball.y);
+    const distance = this.position.sub(ball.position).magnitude();
     this.grabBall = false;
+
     if (distance < ball.size && !ball.shooting && !this.hasBall) {
       this.grabBall = true;
       this.hasBall = true;
@@ -62,14 +63,12 @@ class Player {
       if (this.isMoving) dribbleAnimation(paths);
       else idleDribbleAnimation(paths);
     }
-    if (this.hasBall) {
-      ball.x = this.x;
-      ball.y = this.y;
-    }
+
+    if (this.hasBall) ball.position.set(this.position.x, this.position.y);
   }
 
   shoot(ball) {
-    const distHoop = Math.hypot(this.x - this.target.x, this.y - this.target.y);
+    const distHoop = this.target.sub(this.position).magnitude();
     const character = this.playerDOM.querySelector("#character");
     const fullPaths = Array.from(this.playerDOM.querySelectorAll("path"));
     const paths = Array.from(character.querySelectorAll("path"));
@@ -82,10 +81,8 @@ class Player {
     else this.playerDOM.classList.remove("flip");
 
     ball.shooting = true;
-    ball.target.x = this.target.x;
-    ball.target.y = this.target.y;
+    ball.target.set(this.target.x, this.target.y);
 
-    console.log(this)
     if (distHoop > 235.8) ball.probability = this.attribute.shoot3;
     else ball.probability = this.attribute.shoot;
 
@@ -118,52 +115,18 @@ class Player {
     this.wasMoving = this.isMoving;
     
     if (!this.hasBall) {
-      const target = bball;
-      if (this.y > target.y) {
-        this.y -= 5;
-        this.isMoving = true;
-      } else this.isMoving = false;
-      if (this.y < target.y) {
-        this.y += 5;
-        this.isMoving = true;
-      }
-      if (this.x < target.x) {
-        this.playerDOM.classList.remove("flip");
-        this.x += 5;
-        this.isMoving = true;
-      }
-      if (this.x > target.x) {
-        this.playerDOM.classList.add("flip");
-        this.x -= 5;
-        this.isMoving = true;
-      }
+      this.velocity = bball.position.sub(this.position).normalize(5)
+      this.position = this.position.add(this.velocity)
+
+      this.isMoving = true;
+      if (this.position.x < bball.position.x) this.playerDOM.classList.remove("flip");
+      else this.playerDOM.classList.add("flip");
     }
     else {
       this.shoot(bball)
     }
 
-    // if (buffer.canvas.height >= this.y) {
-    //   this.y += 5;
-    //   this.isMoving = true;
-    // } else this.isMoving = false;
-
-    // if (0 < this.y) {
-    //   this.y -= 5;
-    //   this.isMoving = true;
-    // }
-    // if (buffer.canvas.width >= this.x) {
-    //   this.playerDOM.classList.remove("flip");
-    //   this.x += 5;
-    //   this.isMoving = true;
-    // } else this.isMoving = false;
-    // if (0 < this.x) {
-    //   this.playerDOM.classList.add("flip");
-    //   this.x -= 5;
-    //   this.isMoving = true;
-    // }
-    // if (controller.space.active && this.hasBall)
-    //   this.shoot(bball);
-    this.playerDOM.style.zIndex = this.y;
+    this.playerDOM.style.zIndex = this.position.y;
   }
 }
 
@@ -176,24 +139,18 @@ class Team {
 }
 
 const bball = {
-  x: buffer.canvas.width / 2,
-  y: buffer.canvas.height / 2,
+  position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
   speed: 10,
   size: 15,
   shooting: false,
   bouncingoff: false,
   probability: 0,
-  target: { x: 0, y: 0 },
+  target: new Vector2(),
   move() {
-    const dx = this.target.x - this.x;
-    const dy = this.target.y - this.y;
-    const angle = Math.atan2(dy, dx);
-
-    this.x += this.speed * Math.cos(angle);
-    this.y += this.speed * Math.sin(angle);
+    this.position = this.position.add(this.target.sub(this.position).normalize(this.speed));
   },
   reachTarget() {
-    const dist = Math.hypot(this.target.x - this.x, this.target.y - this.y);
+    const dist = this.target.sub(this.position).magnitude();
 
     if (dist < this.size / 1.5) return true;
     else return false;
@@ -202,8 +159,7 @@ const bball = {
     return Math.random() < bball.probability;
   },
   makeGoal() {
-    this.x = this.target.x;
-    this.y = this.target.y;
+    this.position.set(this.target.x, this.target.y)
   },
   bounceoff() {
     this.bouncingoff = true;

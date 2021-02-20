@@ -62,15 +62,8 @@ function setPlayerDOM(player) {
 }
 
 function generateTeam() {
-  const target1 = {
-    x: buffer.canvas.width - 55,
-    y: buffer.canvas.height / 2,
-  };
-
-  const target2 = {
-    x: 55,
-    y: buffer.canvas.height / 2,
-  };
+  const target1 = new Vector2(buffer.canvas.width - 55, buffer.canvas.height / 2);
+  const target2 = new Vector2(55, buffer.canvas.height / 2);
 
   const centerAttribute = new Attribute(0.45, 0.24, 0.67, 89, 65);
   const sforwardAttribute = new Attribute(0.53, 0.31, 0.77, 78, 76);
@@ -214,8 +207,8 @@ function drawTeam(team) {
   team.players.forEach((player) => {
     let position = convertToWindowCoord(
       player.playerDOM.querySelector("svg").classList.contains("flip")
-        ? new Vector2(player.x - 20, player.y - 20)
-        : new Vector2(player.x - 40, player.y - 20)
+        ? player.position.sub(new Vector2(20, 20))
+        : player.position.sub(new Vector2(40, 20))
     );
 
     player.playerDOM.style.transform =
@@ -225,7 +218,7 @@ function drawTeam(team) {
 
 function draw_bball() {
   const bballDOM = document.querySelector("#basketball");
-  let position = convertToWindowCoord(new Vector2(bball.x - 15, bball.y - 15));
+  let position = convertToWindowCoord(bball.position.sub(new Vector2(15, 15)))
 
   bballDOM.style.transform =
     "translate(" + position.x + "px, " + position.y + "px)";

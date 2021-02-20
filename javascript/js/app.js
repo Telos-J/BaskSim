@@ -21,6 +21,7 @@ function update() {
   }
   updateBallActivity(bball, controlPlayer, players);
   updateScore(roster1, roster2);
+  // console.log(controlPlayer.position)
 }
 
 function render() {
