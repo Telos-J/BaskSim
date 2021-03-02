@@ -1,37 +1,24 @@
-import { bball } from "./gameObjects.js";
-import {
-  generateTeam,
-  control,
-  animate,
-  updateBallActivity,
-  drawTeam,
-  draw_bball,
-  updateScore,
-} from "./gameMethods.js";
+import { ball } from "./gameObjects.js";
+import { generateTeams, collectPlayers, updateBallActivity, updateScore } from "./gameMethods.js";
 import { drawBackground, drawCourtLines } from "./drawCourt.js";
 
 function update() {
-  // control(controlPlayer);
   for (const player of players) {
     if (!player.isShooting) {
-      player.avoid(players);
-      player.control(bball);
-      player.dribble(bball);
-      animate(player);
+      player.initState()
+      if (!player.coolTime) player.control(ball, players);
+      player.update();
+      player.animate();
     }
   }
-  updateBallActivity(bball, controlPlayer, players);
+  updateBallActivity(ball, players);
   updateScore(roster1, roster2);
-  // console.log(controlPlayer.position)
 }
 
 function render() {
   drawBackground("#b86125");
   drawCourtLines();
-  drawTeam(roster1, "green");
-  drawTeam(roster2, "purple");
-  draw_bball();
-  controlPlayer.drawNeighborhood();
+  // players[0].drawNeighborhood();
   context.drawImage(
     buffer.canvas,
     0,
@@ -45,17 +32,8 @@ function render() {
   );
 }
 
-const [roster1, roster2] = generateTeam();
-const players = roster1.players.concat(roster2.players);
-
-let controlPlayer = roster1.players[0];
-
-for (const player of players) {
-  player.playerDOM.addEventListener("click", () => {
-    controlPlayer = player;
-  });
-}
-
+const [roster1, roster2] = generateTeams();
+const players = collectPlayers(roster1, roster2);
 const engine = new Engine(1000 / 30, update, render);
 
 resize();

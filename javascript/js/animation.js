@@ -1,4 +1,4 @@
-const idle = document.querySelector(".blob");
+const idle = document.querySelector("#idle");
 const idle_paths = Array.from(idle.querySelectorAll("path"));
 const idle2 = document.querySelector("#idle2");
 const idle2_paths = Array.from(idle2.querySelectorAll("path"));
@@ -39,7 +39,7 @@ const shoot5_paths = Array.from(shoot5.querySelectorAll("path"));
 
 function idleAnimation(paths) {
   paths.map(function (item, idx) {
-    gsap.killTweensOf(item);
+    gsap.killTweensOf(item)
     gsap.fromTo(
       item,
       {

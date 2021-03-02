@@ -6,7 +6,7 @@ import {
   shootAnimation,
 } from "./animation.js";
 
-class Attribute {
+export class Attribute {
   constructor(shoot, shoot3, defence, stamina, speed) {
     this.shoot = shoot;
     this.shoot3 = shoot3;
@@ -16,7 +16,7 @@ class Attribute {
   }
 }
 
-class Player {
+export class Player {
   constructor(
     role,
     height,
@@ -38,7 +38,8 @@ class Player {
     this.avoidance = new Vector2();
     this.target = target;
     this.hasBall = false;
-    this.grabBall = false;
+    this.hadBall = false;
+    this.graball = false;
     this.attribute = attribute;
     this.attempt = 0;
     this.score = 0;
@@ -50,24 +51,84 @@ class Player {
     this.wasMoving = false;
     this.isShooting = false;
     this.range = 100;
+    this.coolTime = 0;
+    this.avoidOpponentConst = 1;
+    this.avoidWallConst = 1.3;
+  }
+
+  initState() {
+    this.wasMoving = this.isMoving;
+    this.hadBall = this.hasBall;
+    this.velocity.set(0, 0);
+  }
+
+  stateChange() {
+    return this.wasMoving !== this.isMoving || this.hadBall !== this.hasBall
+  }
+
+  control(ball, players) {
+    if (ball.isDead || this.isDefense(ball)) {
+      this.chaseBall(ball);
+      this.grabBall(ball);
+    } else if (this.isOffense(ball)) {
+      this.dribble(ball)
+      this.avoidOpponent(players);
+    } 
+
+    this.avoidWall();
+    this.move();
+  }
+
+  move() {
+    this.isMoving = this.velocity.magnitude() ? true : false;
+    if (this.isMoving) {
+      this.velocity = this.velocity.normalize(this.attribute.speed)
+      this.position = this.position.add(this.velocity)
+    }
+  }
+
+  nearBall(ball) {
+    const distance = this.position.sub(ball.position).magnitude();
+    return !ball.shooting && distance < ball.size
+  }
+
+  grabBall(ball) {
+    if (this.nearBall(ball)) {
+      if (ball.player) this.steal(ball.player)
+      this.hasBall = true;
+      ball.player = this;
+      ball.isDead = false;
+    }
+  }
+
+  steal(player) {
+    player.hasBall = false;
+    player.isMoving = false;
+    player.coolTime = 100;
+    player.animate()
   }
 
   dribble(ball) {
-    const distance = this.position.sub(ball.position).magnitude();
-    this.grabBall = false;
-
-    if (distance < ball.size && !ball.shooting && !this.hasBall) {
-      this.grabBall = true;
-      this.hasBall = true;
-      this.playerDOM.querySelector("#dribbleBall").style.display = "block";
-      const paths = Array.from(this.playerDOM.querySelectorAll("path"));
-      document.querySelector("#basketball").style.display = "none";
-      if (this.isMoving) dribbleAnimation(paths);
-      else idleDribbleAnimation(paths);
-    }
-
-    if (this.hasBall) ball.position.set(this.position.x, this.position.y);
+    if (this.hasBall) ball.position.set(this.position.x, this.position.y)
   }
+
+  animate() {
+    if (this.stateChange()) {
+      const character = this.playerDOM.querySelector("#character");
+      const ball = this.playerDOM.querySelector('#dribbleBall');
+      const paths = Array.from(character.querySelectorAll("path"));
+      const fullPaths = Array.from(this.playerDOM.querySelectorAll("path"));
+
+      if (!this.isMoving && !this.hasBall) idleAnimation(paths);
+      else if (this.isMoving && !this.hasBall) walkAnimation(paths);
+      else if (!this.isMoving && this.hasBall) idleDribbleAnimation(fullPaths);
+      else if (this.isMoving && this.hasBall) dribbleAnimation(fullPaths);
+      
+      if (this.hasBall) ball.style.display = "block";
+      else ball.style.display = "none";
+    }
+  }
+
 
   shoot(ball) {
     const distHoop = this.target.sub(this.position).magnitude();
@@ -91,14 +152,17 @@ class Player {
     document.querySelector("#basketball").style.display = "block";
     this.playerDOM.querySelector("#dribbleBall").style.display = "none";
     shootAnimation(fullPaths, this);
-    // if (this.isMoving) walkAnimation(paths);
-    // else idleAnimation(paths);
   }
 
-  updateStat({ goal, bball_probability }) {
+  update() {
+    this.coolTime = this.coolTime-- > 0 ? this.coolTime : 0;
+    this.updateDOM()
+  }
+
+  updateStat({ goal, ball_probability }) {
     this.attempt += 1;
     if (goal) {
-      if (bball_probability == this.attribute.shoot3) {
+      if (ball_probability == this.attribute.shoot3) {
         this.score += 3;
         this.team.score += 3;
       } else {
@@ -113,27 +177,37 @@ class Player {
     console.log("shootProb: ", this.shootProb);
   }
 
-  control(bball) {
-    this.wasMoving = this.isMoving;
-    
-    if (!this.hasBall) {
-      this.velocity = bball.position.sub(this.position).normalize(5)
-      this.position = this.position.add(this.velocity)
-      this.isMoving = true;
-    }
-    else {
-      if (this.avoidance.magnitude()) { 
-        this.position = this.position.add(this.avoidance)
-        this.isMoving = true;
-      }
-      else this.isMoving = false; 
-      // this.shoot(bball)
-    }
-
-    if (this.position.x < bball.position.x) this.playerDOM.classList.remove("flip");
-    else this.playerDOM.classList.add("flip");
+  updateDOM() {
+    if (this.velocity.x > 0) this.playerDOM.classList.remove("flip");
+    else if (this.velocity.x < 0) this.playerDOM.classList.add("flip");
 
     this.playerDOM.style.zIndex = this.position.y;
+
+    let position = convertToWindowCoord(
+      this.playerDOM.querySelector("svg").classList.contains("flip")
+        ? this.position.sub(new Vector2(20, 20))
+        : this.position.sub(new Vector2(40, 20))
+    );
+
+    this.playerDOM.style.transform =
+      "translate(" + position.x + "px, " + position.y + "px)";
+  }
+
+  isOpponent(player) {
+    return player.team.color !== this.team.color
+  }
+
+  isDefense(ball) {
+    return this.isOpponent(ball.player)
+  }
+
+  isOffense(ball) {
+    return !this.isOpponent(ball.player)
+  }
+
+  chaseBall(ball) {
+    const vectToBall = ball.position.sub(this.position);
+    this.velocity = this.velocity.add(vectToBall.normalize(5))
   }
   
   drawNeighborhood() {
@@ -146,19 +220,38 @@ class Player {
   inNeighborhood(player) {
     return player.position.sub(this.position).magnitude() < this.range;
   }
-  
-  avoid(players) {
+
+  avoidOpponent(players) {
     let avoidance = new Vector2();
-    for (let player of players) {
-      if (player.team.color !== this.team.color && this.inNeighborhood(player)) {
-        avoidance = avoidance.add(this.position.sub(player.position).normalize());
+
+    for (let player of players)
+      if (this.isOpponent(player) && this.inNeighborhood(player)) {
+        let vectToOpponent = this.position.sub(player.position);
+
+        vectToOpponent = vectToOpponent.normalize(this.range / vectToOpponent.magnitude())
+        avoidance = avoidance.add(vectToOpponent);
       }
-    }
-    this.avoidance = avoidance.normalize(5);
+
+    avoidance = avoidance.scale(this.avoidOpponentConst);
+    this.velocity = this.velocity.add(avoidance);
+  }
+
+  avoidWall() {
+    let avoidance = new Vector2();
+
+    if (this.position.x < this.range) avoidance.x =  this.range / this.position.x;
+    if (this.position.y < this.range) avoidance.y = this.range / this.position.y;
+    if (this.position.x > buffer.canvas.width - this.range) 
+      avoidance.x = -this.range / (buffer.canvas.width - this.position.x);
+    if (this.position.y > buffer.canvas.height - this.range)
+      avoidance.y = -this.range / (buffer.canvas.height - this.position.y);
+
+    avoidance = avoidance.scale(this.avoidWallConst);
+    this.velocity = this.velocity.add(avoidance);
   }
 }
 
-class Team {
+export class Team {
   constructor(players, color) {
     this.players = players;
     this.color = color;
@@ -166,7 +259,7 @@ class Team {
   }
 }
 
-const bball = {
+export const ball = {
   position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
   speed: 10,
   size: 15,
@@ -174,24 +267,38 @@ const bball = {
   bouncingoff: false,
   probability: 0,
   target: new Vector2(),
-  move() {
+  player: undefined,
+  isDead: true,
+
+  fly() {
     this.position = this.position.add(this.target.sub(this.position).normalize(this.speed));
   },
+  
   reachTarget() {
     const dist = this.target.sub(this.position).magnitude();
 
     if (dist < this.size / 1.5) return true;
     else return false;
   },
+
   isGoal() {
-    return Math.random() < bball.probability;
+    return Math.random() < this.probability;
   },
+
   makeGoal() {
     this.position.set(this.target.x, this.target.y)
+    this.player.updateStat({
+      goal: true,
+      ball_probability: this.probability,
+    });
   },
+
   bounceoff() {
     this.bouncingoff = true;
+    this.player.updateStat({ goal: false });
+
     const angle = Math.random() * Math.PI + (Math.PI * 3) / 2;
+
     if (this.target.x > buffer.canvas.width / 2) {
       this.target.x = this.target.x - 80 * Math.cos(angle);
       this.target.y = this.target.y + 80 * Math.sin(angle);
@@ -200,6 +307,35 @@ const bball = {
       this.target.y = this.target.y + 80 * Math.sin(angle);
     }
   },
-};
 
-export { Player, Attribute, Team, bball };
+  checkGoal() {
+    if (this.isGoal()) {
+      this.makeGoal();
+    } else {
+      this.bounceoff();
+    }
+  },
+
+  updatePosition() {
+    if (this.shooting || this.bouncingoff) this.fly()
+  },
+
+  updateState() {
+    if (this.reachTarget()) {
+      if (this.shooting) {
+        this.shooting = false;
+        this.checkGoal();
+      }
+      else if (this.bouncingoff) {
+        this.bouncingoff = false;
+        this.player = undefined;
+        this.isDead = true;
+      }
+    }
+  },
+
+  update() {
+    this.updatePosition();
+    this.updateState();
+  }
+};
