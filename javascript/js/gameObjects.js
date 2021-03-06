@@ -129,7 +129,6 @@ export class Player {
     }
   }
 
-
   shoot(ball) {
     const distHoop = this.target.sub(this.position).magnitude();
     const character = this.playerDOM.querySelector("#character");
