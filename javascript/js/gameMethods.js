@@ -74,10 +74,10 @@ export function generateTeams() {
   const team1 = new Team(
     [
       new Player("PG", 185, 86, 11, "Myron Boyce", 338, 272, target1, pguardAttribute), 
-      // new Player("SG", 198, 94, 24, "Adam Chester", 293, 135, target1, sguardAttribute),
-      // new Player("SF", 202, 101, 34, "Daanyal Graves", 101, 423, target1, sforwardAttribute),
-      // new Player("PF", 208, 111, 21, "Tyreese Ward", 88, 181, target1, pforwardAttribute),
-      // new Player("C", 217, 121, 12, "Donovan Robinson", 154, 341, target1, centerAttribute),
+      new Player("SG", 198, 94, 24, "Adam Chester", 293, 135, target1, sguardAttribute),
+      new Player("SF", 202, 101, 34, "Daanyal Graves", 101, 423, target1, sforwardAttribute),
+      new Player("PF", 208, 111, 21, "Tyreese Ward", 88, 181, target1, pforwardAttribute),
+      new Player("C", 217, 121, 12, "Donovan Robinson", 154, 341, target1, centerAttribute),
     ],
     "green"
   );

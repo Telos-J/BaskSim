@@ -54,6 +54,7 @@ export class Player {
     this.coolTime = 0;
     this.avoidOpponentConst = 1;
     this.avoidWallConst = 1.3;
+    this.chaseBallConst = 20;
   }
 
   initState() {
@@ -71,9 +72,11 @@ export class Player {
       this.chaseBall(ball);
       this.grabBall(ball);
     } else if (this.isOffense(ball)) {
-      this.dribble(ball)
+      if (this.hasBall) {
+        this.dribble(ball);
+        this.pass(ball, players);
+      }
       this.avoidOpponent(players);
-      this.pass(ball, players)
     } 
 
     this.avoidWall();
@@ -110,26 +113,30 @@ export class Player {
   }
 
   dribble(ball) {
-    if (this.hasBall) ball.position.set(this.position.x, this.position.y)
+    ball.position.set(this.position.x, this.position.y)
+  }
+
+  determinePass(players) {
+    let pass = false;
+    for (let player of players) {
+      const dist = this.position.sub(player.position).magnitude()
+      if (this.isOpponent(player) && dist < 50) pass = true;
+    }
+    return pass
   }
 
   pass(ball, players) {
-    for (let player of players) {
-      const dist = this.position.sub(player.position).magnitude()
-      if (!this.isOpponent(player) && dist < 20) {
-        console.log('pass')
-        let playerIndex
-        do {
-          playerIndex = Math.floor(Math.random() * this.team.players.length)
-        } while (this.team.players[playerIndex] !== this)
-        const player = this.team.players[playerIndex];
+    if (this.determinePass(players)) {
+      const team = this.team.players.filter(player => player !== this)
+      const idx = Math.floor(Math.random() * team.length);
+      const targetPlayer = team[idx];
 
+      if (targetPlayer) {
         this.hasBall = false;
         ball.passing = true;
-        ball.target = player.position;
+        ball.target = targetPlayer.position;
+        ball.position = ball.position.add(ball.target.sub(ball.position).normalize(this.attribute.speed * 2))
         ball.isDead = true;
-
-        break;
       }
     }
   }
@@ -227,8 +234,9 @@ export class Player {
   }
 
   chaseBall(ball) {
-    const vectToBall = ball.position.sub(this.position);
-    this.velocity = this.velocity.add(vectToBall.normalize(5))
+    let chaseBall = ball.position.sub(this.position);
+    chaseBall = chaseBall.normalize(this.chaseBallConst);
+    this.velocity = this.velocity.add(chaseBall);
   }
   
   drawNeighborhood() {
@@ -281,6 +289,7 @@ export class Team {
 }
 
 export const ball = {
+  DOM: document.querySelector("#basketball"),
   position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
   speed: 10,
   size: 15,
@@ -361,11 +370,11 @@ export const ball = {
   },
 
   updateDOM() {
-    const ballDOM = document.querySelector("#basketball");
     let position = convertToWindowCoord(ball.position.sub(new Vector2(15, 15)))
+    if (this.isDead || this.shooting || this.bouncingoff) this.DOM.style.display = 'block';
+    else this.DOM.style.display = 'none';
 
-    console.log('update')
-    ballDOM.style.transform =
+    this.DOM.style.transform =
       "translate(" + position.x + "px, " + position.y + "px)";
   },
 
