@@ -112,11 +112,7 @@ export function collectPlayers(...teams) {
 }
 
 export function draw_ball() {
-  const ballDOM = document.querySelector("#basketball");
-  let position = convertToWindowCoord(ball.position.sub(new Vector2(15, 15)))
 
-  ballDOM.style.transform =
-    "translate(" + position.x + "px, " + position.y + "px)";
 }
 
 export function updateBallActivity(ball, players) {

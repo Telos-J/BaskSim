@@ -4,15 +4,14 @@ import { drawBackground, drawCourtLines } from "./drawCourt.js";
 
 function update() {
   for (const player of players) {
-    if (!player.isShooting) {
-      player.initState()
-      if (!player.coolTime) player.control(ball, players);
-      player.update();
-      player.animate();
-    }
+    player.initState()
+    if (!player.coolTime) player.control(ball, players);
+    player.update();
+    player.animate();
   }
-  updateBallActivity(ball, players);
-  updateScore(roster1, roster2);
+  // updateBallActivity(ball, players);
+  // updateScore(roster1, roster2);
+  ball.update();
 }
 
 function render() {

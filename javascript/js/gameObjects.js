@@ -73,6 +73,7 @@ export class Player {
     } else if (this.isOffense(ball)) {
       this.dribble(ball)
       this.avoidOpponent(players);
+      this.pass(ball, players)
     } 
 
     this.avoidWall();
@@ -110,6 +111,27 @@ export class Player {
 
   dribble(ball) {
     if (this.hasBall) ball.position.set(this.position.x, this.position.y)
+  }
+
+  pass(ball, players) {
+    for (let player of players) {
+      const dist = this.position.sub(player.position).magnitude()
+      if (!this.isOpponent(player) && dist < 20) {
+        console.log('pass')
+        let playerIndex
+        do {
+          playerIndex = Math.floor(Math.random() * this.team.players.length)
+        } while (this.team.players[playerIndex] !== this)
+        const player = this.team.players[playerIndex];
+
+        this.hasBall = false;
+        ball.passing = true;
+        ball.target = player.position;
+        ball.isDead = true;
+
+        break;
+      }
+    }
   }
 
   animate() {
@@ -264,12 +286,13 @@ export const ball = {
   size: 15,
   shooting: false,
   bouncingoff: false,
+  passing: false,
   probability: 0,
   target: new Vector2(),
   player: undefined,
   isDead: true,
 
-  fly() {
+  move() {
     this.position = this.position.add(this.target.sub(this.position).normalize(this.speed));
   },
   
@@ -316,7 +339,8 @@ export const ball = {
   },
 
   updatePosition() {
-    if (this.shooting || this.bouncingoff) this.fly()
+    if (this.shooting || this.bouncingoff) this.move()
+    if (this.passing) this.move()
   },
 
   updateState() {
@@ -330,11 +354,24 @@ export const ball = {
         this.player = undefined;
         this.isDead = true;
       }
+      else if (this.passing) {
+        this.passing = false;
+      }
     }
+  },
+
+  updateDOM() {
+    const ballDOM = document.querySelector("#basketball");
+    let position = convertToWindowCoord(ball.position.sub(new Vector2(15, 15)))
+
+    console.log('update')
+    ballDOM.style.transform =
+      "translate(" + position.x + "px, " + position.y + "px)";
   },
 
   update() {
     this.updatePosition();
     this.updateState();
+    this.updateDOM();
   }
 };
