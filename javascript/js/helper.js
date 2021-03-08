@@ -65,22 +65,6 @@ const vectorToAngle = function (vector) {
 };
 
 const resize = function () {
-    let width = window.innerWidth * 0.8;
-    let height = window.innerHeight * 0.8;
-    const width_height_ratio = 9 / 16;
-
-    if (height / width > width_height_ratio)
-        height = width * width_height_ratio;
-    else width = height / width_height_ratio;
-
-    // Set display size (css pixels).
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
-
-    // Set actual size in memory (scaled to account for extra pixel density).
-    const scale = window.devicePixelRatio; // Change to 1 on retina screens to see blurry canvas.
-    canvas.width = width * scale;
-    canvas.height = height * scale;
 };
 
 const convertToBufferCoord = function (vector) {
@@ -95,13 +79,8 @@ const convertToBufferCoord = function (vector) {
 };
 
 const convertToWindowCoord = function (vector) {
-    return new Vector2(
-        (vector.x / buffer.canvas.width) *
-            (canvas.width / window.devicePixelRatio) +
-            canvas.offsetLeft,
-        (vector.y / buffer.canvas.height) *
-            (canvas.height / window.devicePixelRatio) +
-            canvas.offsetTop
-    );
+    return vector
+        .sub(new Vector2(canvas.width * 0.49, canvas.height * 0.09))
+        .add(new Vector2(canvas.offsetLeft, canvas.offsetTop))
 };
 

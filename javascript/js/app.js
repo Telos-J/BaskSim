@@ -3,12 +3,20 @@ import { generateTeams, collectPlayers, updateBallActivity, updateScore } from "
 import { drawBackground, drawCourtLines } from "./drawCourt.js";
 
 function update() {
-  for (const player of players) {
+  for (let player of players) {
     player.initState()
-    if (!player.coolTime) player.control(ball, players);
-    player.update();
-    player.animate();
   }
+
+  for (let player of players) {
+    if (!player.coolTime) player.control(ball, players);
+  }
+
+  for (let player of players) {
+    if (player.hasBall) console.log(player.velocity.magnitude(), player.hadBall, player.hasBall, player.wasMoving, player.isMoving)
+    player.animate();
+    player.update();
+  }
+
   // updateBallActivity(ball, players);
   // updateScore(roster1, roster2);
   ball.update();
@@ -18,7 +26,7 @@ function render() {
   drawBackground("#b86125");
   drawCourtLines();
   // players[0].drawNeighborhood();
-  context.drawImage(
+  topviewContext.drawImage(
     buffer.canvas,
     0,
     0,
@@ -26,8 +34,8 @@ function render() {
     buffer.canvas.height,
     0,
     0,
-    context.canvas.width,
-    context.canvas.height
+    topview.width,
+    topview.height
   );
 }
 

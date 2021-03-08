@@ -105,18 +105,23 @@ export class Player {
     }
   }
 
+  chaseBall(ball) {
+    let chaseBall = ball.position.sub(this.position);
+    chaseBall = chaseBall.normalize(this.chaseBallConst);
+    this.velocity = this.velocity.add(chaseBall);
+  }
+
   steal(player) {
     player.hasBall = false;
     player.isMoving = false;
     player.coolTime = 100;
-    player.animate()
   }
 
   dribble(ball) {
     ball.position.set(this.position.x, this.position.y)
   }
 
-  determinePass(players) {
+  shouldPass(players) {
     let pass = false;
     for (let player of players) {
       const dist = this.position.sub(player.position).magnitude()
@@ -125,11 +130,17 @@ export class Player {
     return pass
   }
 
+  passTo() {
+    const team = this.team.players.filter(
+      player => player !== this && !player.coolTime
+    )
+    const idx = Math.floor(Math.random() * team.length);
+    return team[idx];
+  }
+
   pass(ball, players) {
-    if (this.determinePass(players)) {
-      const team = this.team.players.filter(player => player !== this)
-      const idx = Math.floor(Math.random() * team.length);
-      const targetPlayer = team[idx];
+    if (this.shouldPass(players)) {
+      const targetPlayer = this.passTo();
 
       if (targetPlayer) {
         this.hasBall = false;
@@ -209,16 +220,12 @@ export class Player {
     if (this.velocity.x > 0) this.playerDOM.classList.remove("flip");
     else if (this.velocity.x < 0) this.playerDOM.classList.add("flip");
 
-    this.playerDOM.style.zIndex = this.position.y;
+    this.playerDOM.style.zIndex = Math.floor(this.position.y);
 
-    let position = convertToWindowCoord(
-      this.playerDOM.querySelector("svg").classList.contains("flip")
-        ? this.position.sub(new Vector2(20, 20))
-        : this.position.sub(new Vector2(40, 20))
-    );
-
+    let position = new Vector2(...perspectiveTransform(this.position.x, buffer.canvas.height - this.position.y))
+    position = convertToWindowCoord(position);
     this.playerDOM.style.transform =
-      "translate(" + position.x + "px, " + position.y + "px)";
+      "translate(" + (position.x - 40) + "px, " + (position.y - 40) + "px)";
   }
 
   isOpponent(player) {
@@ -233,12 +240,6 @@ export class Player {
     return !this.isOpponent(ball.player)
   }
 
-  chaseBall(ball) {
-    let chaseBall = ball.position.sub(this.position);
-    chaseBall = chaseBall.normalize(this.chaseBallConst);
-    this.velocity = this.velocity.add(chaseBall);
-  }
-  
   drawNeighborhood() {
     buffer.fillStyle = 'rgba(0, 0, 0, 0.5)';
     buffer.beginPath();
@@ -370,12 +371,19 @@ export const ball = {
   },
 
   updateDOM() {
-    let position = convertToWindowCoord(ball.position.sub(new Vector2(15, 15)))
+    let position = new Vector2(...perspectiveTransform(
+      this.position.x, buffer.canvas.height - this.position.y)
+    )
+    this.DOM.style.zIndex = Math.floor(this.position.y);
+    position = convertToWindowCoord(position)
+
+    document.querySelector('#pin').style.transform =
+        "translate(" + position.x + "px, " + position.y + "px)";
     if (this.isDead || this.shooting || this.bouncingoff) this.DOM.style.display = 'block';
     else this.DOM.style.display = 'none';
 
     this.DOM.style.transform =
-      "translate(" + position.x + "px, " + position.y + "px)";
+      "translate(" + (position.x - 10) + "px, " + (position.y - 10) + "px)";
   },
 
   update() {

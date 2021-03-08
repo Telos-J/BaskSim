@@ -37,8 +37,8 @@ body {
 }
 
 .blob {
-    width: 5vw;
-    height: 5vw;
+    width: 80px;
+    height: 80px;
 }
 
 .flip svg {
@@ -54,8 +54,8 @@ body {
 
 #basketball {
     position: absolute;
-    width: 1.5vw;
-    height: 1.5vw;
+    width: 20px;
+    height: 20px;
 }
 
 #dribbleBall {
@@ -94,4 +94,40 @@ body {
 
 .score {
     font-size: 3rem;
+}
+
+#court {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#court-canvas {
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-49%, -9%);
+}
+
+#topview-canvas {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20vh;
+}
+
+.scoreboard {
+    display: none;
+}
+
+#pin {
+    position: absolute;
+    background-color: red;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    z-index: 10000;
 }
