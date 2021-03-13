@@ -12,7 +12,6 @@ function update() {
   }
 
   for (let player of players) {
-    if (player.hasBall) console.log(player.velocity.magnitude(), player.hadBall, player.hasBall, player.wasMoving, player.isMoving)
     player.animate();
     player.update();
   }
@@ -25,7 +24,14 @@ function update() {
 function render() {
   drawBackground("#b86125");
   drawCourtLines();
-  // players[0].drawNeighborhood();
+  players[0].drawNeighborhood();
+
+  for (let player of players) {
+    player.drawPosition()
+  }
+
+  ball.drawPosition()
+
   topviewContext.drawImage(
     buffer.canvas,
     0,

@@ -50,6 +50,7 @@ export class Player {
     this.isMoving = false;
     this.wasMoving = false;
     this.isShooting = false;
+    this.wasShooting = false;
     this.range = 100;
     this.coolTime = 0;
     this.avoidOpponentConst = 1;
@@ -60,6 +61,7 @@ export class Player {
   initState() {
     this.wasMoving = this.isMoving;
     this.hadBall = this.hasBall;
+    this.wasShooting = this.isShooting;
     this.velocity.set(0, 0);
   }
 
@@ -75,6 +77,7 @@ export class Player {
       if (this.hasBall) {
         this.dribble(ball);
         this.pass(ball, players);
+        if (this.shouldShoot()) this.shoot(ball);
       }
       this.avoidOpponent(players);
     } 
@@ -158,8 +161,12 @@ export class Player {
       const ball = this.playerDOM.querySelector('#dribbleBall');
       const paths = Array.from(character.querySelectorAll("path"));
       const fullPaths = Array.from(this.playerDOM.querySelectorAll("path"));
-
-      if (!this.isMoving && !this.hasBall) idleAnimation(paths);
+    
+      if (this.isShooting) {
+        console.log('shoot')
+        shootAnimation(fullPaths, this);
+      }
+      else if (!this.isMoving && !this.hasBall) idleAnimation(paths);
       else if (this.isMoving && !this.hasBall) walkAnimation(paths);
       else if (!this.isMoving && this.hasBall) idleDribbleAnimation(fullPaths);
       else if (this.isMoving && this.hasBall) dribbleAnimation(fullPaths);
@@ -169,14 +176,20 @@ export class Player {
     }
   }
 
+  shouldShoot() {
+    let shouldShoot = false;
+    const distHoop = this.target.sub(this.position).magnitude();
+    if (distHoop < 300) shouldShoot = true;
+
+    return shouldShoot;
+  }
+
   shoot(ball) {
     const distHoop = this.target.sub(this.position).magnitude();
-    const character = this.playerDOM.querySelector("#character");
-    const fullPaths = Array.from(this.playerDOM.querySelectorAll("path"));
-    const paths = Array.from(character.querySelectorAll("path"));
 
     this.hasBall = false;
     this.isShooting = true;
+    this.coolTime = 50;
 
     if (this.target.x < buffer.canvas.width / 2)
       this.playerDOM.classList.add("flip");
@@ -190,7 +203,6 @@ export class Player {
 
     document.querySelector("#basketball").style.display = "block";
     this.playerDOM.querySelector("#dribbleBall").style.display = "none";
-    shootAnimation(fullPaths, this);
   }
 
   update() {
@@ -238,6 +250,13 @@ export class Player {
 
   isOffense(ball) {
     return !this.isOpponent(ball.player)
+  }
+
+  drawPosition() {
+    buffer.fillStyle = this.team.color;
+    buffer.beginPath();
+    buffer.arc(this.position.x, this.position.y, 20, 0, Math.PI * 2);
+    buffer.fill();
   }
 
   drawNeighborhood() {
@@ -390,5 +409,12 @@ export const ball = {
     this.updatePosition();
     this.updateState();
     this.updateDOM();
+  },
+
+  drawPosition() {
+    buffer.fillStyle = 'orange';
+    buffer.beginPath();
+    buffer.arc(this.position.x, this.position.y, 10, 0, Math.PI * 2);
+    buffer.fill();
   }
 };
