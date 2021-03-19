@@ -77,7 +77,7 @@ export class Player {
       if (this.hasBall) {
         this.dribble(ball);
         this.pass(ball, players);
-        if (this.shouldShoot()) this.shoot(ball);
+        this.shoot(ball);
       }
       this.avoidOpponent(players);
     } 
@@ -176,33 +176,27 @@ export class Player {
     }
   }
 
-  shouldShoot() {
+  shouldShoot(dist) {
     let shouldShoot = false;
-    const distHoop = this.target.sub(this.position).magnitude();
-    if (distHoop < 300) shouldShoot = true;
+    if (dist < 300) shouldShoot = true;
 
     return shouldShoot;
   }
 
   shoot(ball) {
-    const distHoop = this.target.sub(this.position).magnitude();
+    const dist = this.target.sub(this.position).magnitude();
+    
+    if (this.shouldShoot(dist)) {
+      this.hasBall = false;
+      this.isShooting = true;
+      this.coolTime = 50;
 
-    this.hasBall = false;
-    this.isShooting = true;
-    this.coolTime = 50;
+      ball.shooting = true;
+      ball.target.set(this.target.x, this.target.y);
 
-    if (this.target.x < buffer.canvas.width / 2)
-      this.playerDOM.classList.add("flip");
-    else this.playerDOM.classList.remove("flip");
-
-    ball.shooting = true;
-    ball.target.set(this.target.x, this.target.y);
-
-    if (distHoop > 235.8) ball.probability = this.attribute.shoot3;
-    else ball.probability = this.attribute.shoot;
-
-    document.querySelector("#basketball").style.display = "block";
-    this.playerDOM.querySelector("#dribbleBall").style.display = "none";
+      if (dist > 235.8) ball.probability = this.attribute.shoot3;
+      else ball.probability = this.attribute.shoot;
+    }
   }
 
   update() {
@@ -229,8 +223,20 @@ export class Player {
   }
 
   updateDOM() {
-    if (this.velocity.x > 0) this.playerDOM.classList.remove("flip");
-    else if (this.velocity.x < 0) this.playerDOM.classList.add("flip");
+    if (this.isShooting) {
+      if (this.target.x < buffer.canvas.width / 2)
+        this.playerDOM.classList.add("flip");
+      else 
+        this.playerDOM.classList.remove("flip");
+    } else {
+      if (this.velocity.x < 0) 
+        this.playerDOM.classList.add("flip");
+      else 
+        this.playerDOM.classList.remove("flip");
+    }
+
+    if (this.hasBall) this.playerDOM.querySelector("#dribbleBall").style.display = "block";
+    else this.playerDOM.querySelector("#dribbleBall").style.display = "none";
 
     this.playerDOM.style.zIndex = Math.floor(this.position.y);
 
@@ -342,6 +348,7 @@ export const ball = {
       goal: true,
       ball_probability: this.probability,
     });
+    this.isDead = true;
   },
 
   bounceoff() {

@@ -241,9 +241,9 @@ function shootAnimation(paths, player) {
           shapeIndex: shapeIndex,
         },
         onComplete: function() {
-          idleAnimation(paths);
           player.isShooting = false;
           player.isMoving = false;
+          player.animate();
         }
       });
   });
