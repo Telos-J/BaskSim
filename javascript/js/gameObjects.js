@@ -96,7 +96,7 @@ export class Player {
 
     nearBall(ball) {
         const distance = this.position.sub(ball.position).magnitude();
-        return !ball.shooting && distance < ball.size
+        return !ball.flying && distance < ball.size
     }
 
     grabBall(ball) {
@@ -163,7 +163,6 @@ export class Player {
             const fullPaths = Array.from(this.playerDOM.querySelectorAll("path"));
 
             if (this.isShooting) {
-                console.log('shoot')
                 shootAnimation(fullPaths, this);
             }
             else if (!this.isMoving && !this.hasBall) idleAnimation(paths);
@@ -191,7 +190,8 @@ export class Player {
             this.isShooting = true;
             this.coolTime = 50;
 
-            ball.shooting = true;
+            ball.flying = true;
+            ball.reachedTarget = false;
             ball.target.set(this.target.x, this.target.y);
 
             const t = dist / ball.speed;
@@ -326,13 +326,13 @@ export const ball = {
     ySpeed: 0,
     gravity: 1,
     size: 15,
-    shooting: false,
-    bouncingoff: false,
+    flying: false,
     passing: false,
     probability: 0,
     target: new Vector2(),
     player: undefined,
     isDead: true,
+    reachedTarget: false,
 
     move() {
         this.position = this.position.add(this.target.sub(this.position).normalize(this.speed));
@@ -342,13 +342,15 @@ export const ball = {
         this.position = this.position.add(this.target.sub(this.position).normalize(this.speed));
         this.ySpeed -= this.gravity;
         this.yPosition += this.ySpeed;
-
     },
 
     reachTarget() {
         const dist = this.target.sub(this.position).magnitude();
 
-        if (dist < this.size / 1.5) return true;
+        if (!this.reachedTarget && dist < this.size / 1.5) {
+            this.reachedTarget = true;
+            return true;
+        }
         else return false;
     },
 
@@ -362,12 +364,11 @@ export const ball = {
             goal: true,
             ball_probability: this.probability,
         });
-        this.isDead = true;
     },
 
     bounceoff() {
-        this.bouncingoff = true;
         this.player.updateStat({ goal: false });
+        this.ySpeed = this.speed;
 
         const angle = Math.random() * Math.PI + (Math.PI * 3) / 2;
 
@@ -389,18 +390,14 @@ export const ball = {
     },
 
     updatePosition() {
-        if (this.shooting || this.bouncingoff) this.fly();
+        if (this.flying) this.fly();
         if (this.passing) this.move();
     },
 
     updateState() {
         if (this.reachTarget()) {
-            if (this.shooting) {
-                this.shooting = false;
-                this.checkGoal();
-            }
-            else if (this.bouncingoff) {
-                this.bouncingoff = false;
+            if (this.flying) {
+                if (this.player) this.checkGoal()
                 this.player = undefined;
                 this.isDead = true;
             }
@@ -408,11 +405,16 @@ export const ball = {
                 this.passing = false;
             }
         }
+
+        if (this.yPosition <= 0) {
+            this.yPosition = 0;
+            this.flying = false;
+        }
     },
 
     updateDOM() {
         let position
-        if (this.shooting || this.bouncingoff)
+        if (this.flying)
             position = new Vector2(...perspectiveTransform(
                 this.position.x, buffer.canvas.height - this.position.y, this.yPosition)
             )
@@ -425,11 +427,13 @@ export const ball = {
 
         document.querySelector('#pin').style.transform =
             "translate(" + position.x + "px, " + position.y + "px)";
-        if (this.isDead || this.shooting || this.bouncingoff) this.DOM.style.display = 'block';
+        if (this.isDead || this.flying) this.DOM.style.display = 'block';
         else this.DOM.style.display = 'none';
 
         this.DOM.style.transform =
             "translate(" + (position.x - 10) + "px, " + (position.y - 10) + "px)";
+
+        //console.log(this.isDead, this.DOM.style.display)
     },
 
     update() {
