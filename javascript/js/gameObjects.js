@@ -397,9 +397,15 @@ export const ball = {
     },
 
     updateDOM() {
-        let position = new Vector2(...perspectiveTransform(
-            this.position.x, buffer.canvas.height - this.position.y)
-        )
+        let position
+        if (this.shooting || this.bouncingoff)
+            position = new Vector2(...perspectiveTransform(
+                this.position.x, buffer.canvas.height - this.position.y, 170)
+            )
+        else
+            position = new Vector2(...perspectiveTransform(
+                this.position.x, buffer.canvas.height - this.position.y)
+            )
         this.DOM.style.zIndex = Math.floor(this.position.y);
         position = convertToWindowCoord(position)
 
