@@ -194,6 +194,10 @@ export class Player {
             ball.shooting = true;
             ball.target.set(this.target.x, this.target.y);
 
+            const t = dist / ball.speed;
+            ball.ySpeed = (170 + 0.5 * ball.gravity * t ** 2) / t;
+            ball.yPosition = 0;
+
             if (dist > 235.8) ball.probability = this.attribute.shoot3;
             else ball.probability = this.attribute.shoot;
         }
@@ -317,7 +321,10 @@ export class Team {
 export const ball = {
     DOM: document.querySelector("#basketball"),
     position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
+    yPosition: 0,
     speed: 10,
+    ySpeed: 0,
+    gravity: 1,
     size: 15,
     shooting: false,
     bouncingoff: false,
@@ -329,6 +336,13 @@ export const ball = {
 
     move() {
         this.position = this.position.add(this.target.sub(this.position).normalize(this.speed));
+    },
+
+    fly() {
+        this.position = this.position.add(this.target.sub(this.position).normalize(this.speed));
+        this.ySpeed -= this.gravity;
+        this.yPosition += this.ySpeed;
+
     },
 
     reachTarget() {
@@ -375,8 +389,8 @@ export const ball = {
     },
 
     updatePosition() {
-        if (this.shooting || this.bouncingoff) this.move()
-        if (this.passing) this.move()
+        if (this.shooting || this.bouncingoff) this.fly();
+        if (this.passing) this.move();
     },
 
     updateState() {
@@ -400,7 +414,7 @@ export const ball = {
         let position
         if (this.shooting || this.bouncingoff)
             position = new Vector2(...perspectiveTransform(
-                this.position.x, buffer.canvas.height - this.position.y, 170)
+                this.position.x, buffer.canvas.height - this.position.y, this.yPosition)
             )
         else
             position = new Vector2(...perspectiveTransform(
