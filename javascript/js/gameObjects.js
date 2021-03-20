@@ -196,6 +196,8 @@ export class Player {
 
             const t = dist / ball.speed;
             ball.ySpeed = (170 + 0.5 * ball.gravity * t ** 2) / t;
+            ball.ySpeed = Math.min(21, ball.ySpeed)
+            console.log(ball.ySpeed)
             ball.yPosition = 0;
 
             if (dist > 235.8) ball.probability = this.attribute.shoot3;
@@ -222,8 +224,6 @@ export class Player {
             this.goals += 1;
         }
         this.shootProb = this.goals / this.attempt;
-        console.log("score: ", this.score);
-        console.log("shootProb: ", this.shootProb);
     }
 
     updateDOM() {
@@ -339,7 +339,8 @@ export const ball = {
     },
 
     fly() {
-        this.position = this.position.add(this.target.sub(this.position).normalize(this.speed));
+        if (!this.reachedTarget)
+            this.position = this.position.add(this.target.sub(this.position).normalize(this.speed));
         this.ySpeed -= this.gravity;
         this.yPosition += this.ySpeed;
     },
@@ -359,7 +360,7 @@ export const ball = {
     },
 
     makeGoal() {
-        this.position.set(this.target.x, this.target.y)
+        console.log('goal!')
         this.player.updateStat({
             goal: true,
             ball_probability: this.probability,
@@ -379,6 +380,8 @@ export const ball = {
             this.target.x = this.target.x + 80 * Math.cos(angle);
             this.target.y = this.target.y + 80 * Math.sin(angle);
         }
+
+        this.reachedTarget = false;
     },
 
     checkGoal() {
