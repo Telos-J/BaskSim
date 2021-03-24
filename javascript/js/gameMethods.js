@@ -73,22 +73,24 @@ export function generateTeams() {
 
     const team1 = new Team(
         [
+            // new Player("PG", 185, 86, 11, "Myron Boyce", buffer.canvas.width - 354, 250, target1, pguardAttribute),
             new Player("PG", 185, 86, 11, "Myron Boyce", 338, 272, target1, pguardAttribute),
-            // new Player("SG", 198, 94, 24, "Adam Chester", 293, 135, target1, sguardAttribute),
-            // new Player("SF", 202, 101, 34, "Daanyal Graves", 101, 423, target1, sforwardAttribute),
-            // new Player("PF", 208, 111, 21, "Tyreese Ward", 88, 181, target1, pforwardAttribute),
-            // new Player("C", 217, 121, 12, "Donovan Robinson", 154, 341, target1, centerAttribute),
+            new Player("SG", 198, 94, 24, "Adam Chester", 293, 135, target1, sguardAttribute),
+            new Player("SF", 202, 101, 34, "Daanyal Graves", 101, 423, target1, sforwardAttribute),
+            new Player("PF", 208, 111, 21, "Tyreese Ward", 88, 181, target1, pforwardAttribute),
+            new Player("C", 217, 121, 12, "Donovan Robinson", 154, 341, target1, centerAttribute),
         ],
         "green"
     );
 
     const team2 = new Team(
         [
+            // new Player("PG", 184, 89, 7, "Damion Lee", 354, 250, target2, pguardAttribute),
             new Player("PG", 184, 89, 7, "Damion Lee", buffer.canvas.width - 338, 272, target2, pguardAttribute),
-            // new Player("SG", 200, 98, 13, "Chris Paul", buffer.canvas.width - 293, 135, target2, sguardAttribute),
-            // new Player("SF", 206, 102, 23, "Zaire Willams", buffer.canvas.width - 101, 423, target2, sforwardAttribute),
-            // new Player("PF", 210, 107, 34, "Giannis Antetokumpo", buffer.canvas.width - 88, 181, target2, pforwardAttribute),
-            // new Player("C", 216, 128, 54, "Dwight Howard", buffer.canvas.width - 154, 341, target2, centerAttribute),
+            new Player("SG", 200, 98, 13, "Chris Paul", buffer.canvas.width - 293, 135, target2, sguardAttribute),
+            new Player("SF", 206, 102, 23, "Zaire Willams", buffer.canvas.width - 101, 423, target2, sforwardAttribute),
+            new Player("PF", 210, 107, 34, "Giannis Antetokumpo", buffer.canvas.width - 88, 181, target2, pforwardAttribute),
+            new Player("C", 216, 128, 54, "Dwight Howard", buffer.canvas.width - 154, 341, target2, centerAttribute),
         ],
         "purple"
     );
