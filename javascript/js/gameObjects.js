@@ -71,8 +71,9 @@ export class Player {
 
     control(ball, players) {
         if (ball.isDead) {
-            this.chaseBall(ball);
+            // this.chaseBall(ball);
             this.grabBall(ball);
+            this.avoidOpponent(players);
         } else if (this.isDefense(ball)) {
             this.markOpponent(players);
             this.grabBall(ball);
@@ -86,7 +87,8 @@ export class Player {
         }
 
         this.avoidWall();
-        this.move();
+        if (this.back_number === 11)
+            this.move();
     }
 
     move() {
