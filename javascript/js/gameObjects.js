@@ -201,14 +201,8 @@ export class Player {
             ball.showDOM();
             ball.isDead = true;
             ball.inBasket = false;
+            ball.bouncingOff = false;
             ball.dribbling = false;
-
-            // `const t = dist / ball.speed;
-            // `ball.ySpeed = (170 + 0.5 * ball.gravity * t ** 2) / t;
-            // `ball.ySpeed = Math.min(21, ball.ySpeed)
-            // `ball.yPosition = 0;
-
-            //console.log(dist, ball.speed, ball.ySpeed)
 
             if (dist > 235.8) ball.probability = this.attribute.shoot3;
             else ball.probability = this.attribute.shoot;
@@ -339,8 +333,7 @@ export const rightHoop = new Hoop(buffer.canvas.width - 55, buffer.canvas.height
 
 export const ball = {
     DOM: document.querySelector("#basketball"),
-    position: new Vector2(354, buffer.canvas.height / 2),
-    // position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
+    position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
     velocity: new Vector2(),
     yPosition: 0,
     speed: 10,
@@ -355,6 +348,7 @@ export const ball = {
     player: undefined,
     isDead: true,
     inBasket: false,
+    bouncingOff: false,
     dribbling: false,
 
     move() {
@@ -373,7 +367,7 @@ export const ball = {
     },
 
     reset() {
-        this.position = new Vector2(354, buffer.canvas.height / 2);
+        this.position = new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2);
         this.velocity = new Vector2();
         this.yPosition = 0;
         this.speed = 10;
@@ -420,21 +414,24 @@ export const ball = {
 
     makeGoal(hoop) {
         console.log('goal')
-        this.player.updateStat({
+        if (this.player) this.player.updateStat({
             goal: true,
             ball_probability: this.probability,
         });
-        ball.position.set(hoop.position.x, hoop.position.y);
-        ball.velocity.set(0, 0);
-        ball.ySpeed = 0;
-        ball.inBasket = true;
+        this.position.set(hoop.position.x, hoop.position.y);
+        this.velocity.set(0, 0);
+        this.ySpeed = 0;
+        this.inBasket = true;
+        this.player = undefined;
     },
 
     bounceoff(hoop) {
         console.log('bounceoff')
-        this.player.updateStat({ goal: false });
+        if (this.player) this.player.updateStat({ goal: false });
+        this.bouncingOff = true;
         this.ySpeed = -this.ySpeed;
         this.speed = 3;
+        this.player = undefined;
 
         const angle = Math.random() * Math.PI + (Math.PI * 3) / 2;
 
@@ -447,8 +444,8 @@ export const ball = {
 
     checkGoal() {
         for (let hoop of [leftHoop, rightHoop]) {
-            if (!ball.inBasket && Math.abs(this.yPosition - 170) < ball.size && ball.ySpeed < 0 &&
-                ball.position.sub(hoop.position).magnitude() < ball.size) {
+            if (!this.inBasket && !this.bouncingOff && Math.abs(this.yPosition - 170) < this.size && this.ySpeed < 0 &&
+                this.position.sub(hoop.position).magnitude() < this.size) {
 
                 if (this.isGoal()) {
                     this.makeGoal(hoop);
@@ -456,25 +453,15 @@ export const ball = {
                     this.bounceoff(hoop);
                 }
             }
-
         }
     },
 
     collideBackboard() {
-        if (this.yPosition > 170 &&
-            this.position.x < leftHoop.position.x &&
-            this.position.y > leftHoop.position.y - 55 &&
-            this.position.y < leftHoop.position.y + 55) {
+        if (this.yPosition > 170 + this.size &&
+            (this.position.sub(leftHoop.position).magnitude() < this.size ||
+                this.position.sub(rightHoop.position).magnitude() < this.size)) {
             this.velocity = this.velocity.scale(-1)
         }
-
-        if (this.yPosition > 170 &&
-            this.position.x > rightHoop.position.x &&
-            this.position.y > rightHoop.position.y - 55 &&
-            this.position.y < rightHoop.position.y + 55) {
-            this.velocity = this.velocity.scale(-1)
-        }
-
     },
 
     updateState() {
