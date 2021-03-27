@@ -62,7 +62,7 @@ export class Player {
         this.wasMoving = this.isMoving;
         this.hadBall = this.hasBall;
         this.wasShooting = this.isShooting;
-        this.velocity.set(0, 0);
+        //this.velocity.set(0, 0);
     }
 
     stateChange() {
@@ -71,9 +71,8 @@ export class Player {
 
     control(ball, players) {
         if (ball.isDead) {
-            // this.chaseBall(ball);
+            this.chaseBall(ball);
             this.grabBall(ball);
-            this.avoidOpponent(players);
         } else if (this.isDefense(ball)) {
             this.markOpponent(players);
             this.grabBall(ball);
@@ -87,8 +86,7 @@ export class Player {
         }
 
         this.avoidWall();
-        if (this.back_number === 11)
-            this.move();
+        this.move();
     }
 
     move() {
