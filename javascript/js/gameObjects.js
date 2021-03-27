@@ -53,6 +53,7 @@ export class Player {
         this.range = 100;
         this.coolTime = 0;
         this.avoidOpponentConst = 1;
+        this.markOpponentConst = 1;
         this.avoidWallConst = 1.3;
         this.chaseBallConst = 20;
     }
@@ -69,8 +70,11 @@ export class Player {
     }
 
     control(ball, players) {
-        if (ball.isDead || this.isDefense(ball)) {
+        if (ball.isDead) {
             this.chaseBall(ball);
+            this.grabBall(ball);
+        } else if (this.isDefense(ball)) {
+            this.markOpponent(players);
             this.grabBall(ball);
         } else if (this.isOffense(ball)) {
             if (this.hasBall) {
@@ -282,6 +286,15 @@ export class Player {
 
     inNeighborhood(player) {
         return player.position.sub(this.position).magnitude() < this.range;
+    }
+
+    markOpponent(players) {
+        for (let player of players) {
+            if (this.isOpponent(player) && player.role === this.role) {
+                const mark = player.position.sub(this.position).normalize(this.markOpponentConst)
+                this.velocity = this.velocity.add(mark)
+            }
+        }
     }
 
     avoidOpponent(players) {
