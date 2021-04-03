@@ -56,6 +56,7 @@ export class Player {
         this.markOpponentConst = 1;
         this.avoidWallConst = 1.3;
         this.chaseBallConst = 20;
+        this.chaseHoopConst = 1;
     }
 
     initState() {
@@ -79,6 +80,7 @@ export class Player {
         } else if (this.isOffense(ball)) {
             if (this.hasBall) {
                 this.dribble(ball);
+                this.chaseHoop();
                 this.pass(ball, players);
             }
             if (this.hasBall) this.shoot(ball);
@@ -118,6 +120,15 @@ export class Player {
         this.velocity = this.velocity.add(chaseBall);
     }
 
+    chaseHoop() {
+        let chaseHoop = this.target.sub(this.position);
+        if (chaseHoop.magnitude() > 300)
+            chaseHoop = chaseHoop.normalize(this.chaseHoopConst);
+        else if (chaseHoop.magnitude() < 100)
+            chaseHoop = chaseHoop.normalize(this.chaseHoopConst).scale(-1);
+        this.velocity = this.velocity.add(chaseHoop);
+    }
+
     steal(player) {
         player.hasBall = false;
         player.isMoving = false;
@@ -133,7 +144,7 @@ export class Player {
         let empty = true;
         for (let player of players) {
             const dist = this.position.sub(player.position).magnitude()
-            if (this.isOpponent(player) && dist < 50) empty = false;
+            if (this.isOpponent(player) && dist < 100) empty = false;
         }
 
         return empty
@@ -153,26 +164,24 @@ export class Player {
     }
 
     pass(ball, players) {
-        if (!this.isEmpty(players)) {
-            const targetPlayer = this.passTo(players);
-
-            if (targetPlayer) {
-                const dist = targetPlayer.position.sub(this.position).magnitude();
-                this.hasBall = false;
-                ball.passing = true;
-                if (dist > 350) {
-                    ball.speed = 25;
-                    ball.ySpeed = 10;
-                } else {
-                    ball.speed = dist / 20 + 7.5;
-                    ball.ySpeed = -5;
-                }
-                ball.velocity = targetPlayer.position.sub(this.position).normalize(ball.speed);
-                ball.yPosition = 50;
-                ball.isDead = true;
-                ball.dribbling = false;
-                ball.showDOM();
+        const targetPlayer = this.passTo(players);
+        if (!this.isEmpty(players) && targetPlayer) {
+            const dist = targetPlayer.position.sub(this.position).magnitude();
+            this.coolTime = 3;
+            this.hasBall = false;
+            ball.passing = true;
+            if (dist > 350) {
+                ball.speed = 25;
+                ball.ySpeed = 10;
+            } else {
+                ball.speed = dist / 20 + 7.5;
+                ball.ySpeed = -5;
             }
+            ball.velocity = targetPlayer.position.sub(this.position).normalize(ball.speed);
+            ball.yPosition = 50;
+            ball.isDead = true;
+            ball.dribbling = false;
+            ball.showDOM();
         }
     }
 
@@ -212,8 +221,8 @@ export class Player {
             this.coolTime = 50;
 
             ball.flying = true;
-            ball.speed = 23;
-            const angle = Math.PI / 3;
+            ball.speed = 3 / 200 * dist + 18.5;
+            const angle = Math.PI / (0.6 / 200 * dist + 2.1);;
             ball.velocity = this.target.sub(this.position).normalize(ball.speed * Math.cos(angle));
             ball.ySpeed = ball.speed * Math.sin(angle);
             ball.yPosition = 0;
@@ -361,8 +370,7 @@ export const rightHoop = new Hoop(buffer.canvas.width - 55, buffer.canvas.height
 
 export const ball = {
     DOM: document.querySelector("#basketball"),
-    position: new Vector2(buffer.canvas.width - 154, 341),
-    // position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
+    position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
     velocity: new Vector2(),
     yPosition: 0,
     speed: 10,
@@ -407,6 +415,7 @@ export const ball = {
         this.target = new Vector2();
         this.player = undefined;
         this.isDead = true;
+        this.inBasket = false;
     },
 
     bound() {
@@ -419,6 +428,7 @@ export const ball = {
             this.yPosition = 0;
             this.flying = false;
             this.ySpeed = -this.ySpeed * this.elasticity;
+            if (this.inBasket) this.reset()
         }
 
     },
@@ -426,16 +436,6 @@ export const ball = {
     applyFriction() {
         this.velocity = this.velocity.sub(this.velocity.normalize(this.friction));
         if (this.velocity.magnitude() < this.friction) this.velocity.set(0, 0)
-    },
-
-    reachTarget() {
-        const dist = this.target.sub(this.position).magnitude();
-
-        if (!this.reachedTarget && dist < this.size / 1.5) {
-            this.position.set(this.target.x, this.target.y);
-            return true;
-        }
-        else return false;
     },
 
     isGoal() {
@@ -494,21 +494,6 @@ export const ball = {
         }
     },
 
-    updateState() {
-        const target1 = new Vector2(buffer.canvas.width - 55, buffer.canvas.height / 2);
-        const target2 = new Vector2(55, buffer.canvas.height / 2);
-        if (this.reachTarget()) {
-            if (this.flying && Math.abs(this.yPosition - 170) < 10) {
-                if (this.player) this.checkGoal()
-                this.player = undefined;
-                this.isDead = true;
-            }
-            else if (this.passing) {
-                this.passing = false;
-            }
-        }
-    },
-
     updateDOM() {
         let position = new Vector2(...perspectiveTransform(
             this.position.x, buffer.canvas.height - this.position.y, this.yPosition)
@@ -534,7 +519,6 @@ export const ball = {
     update() {
         this.move();
         this.checkGoal();
-        this.updateState();
         this.updateDOM();
     },
 
