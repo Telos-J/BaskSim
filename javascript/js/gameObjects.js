@@ -79,7 +79,7 @@ export class Player {
         } else if (this.isOffense(ball)) {
             if (this.hasBall) {
                 this.dribble(ball);
-                // this.pass(ball, players);
+                this.pass(ball, players);
             }
             if (this.hasBall) this.shoot(ball);
             this.avoidOpponent(players);
@@ -129,34 +129,49 @@ export class Player {
         ball.dribbling = true;
     }
 
-    shouldPass(players) {
-        let pass = false;
+    isEmpty(players) {
+        let empty = true;
         for (let player of players) {
             const dist = this.position.sub(player.position).magnitude()
-            if (this.isOpponent(player) && dist < 50) pass = true;
+            if (this.isOpponent(player) && dist < 50) empty = false;
         }
-        return pass
+
+        return empty
     }
 
-    passTo() {
-        const team = this.team.players.filter(
-            player => player !== this && !player.coolTime
-        )
-        const idx = Math.floor(Math.random() * team.length);
-        return team[idx];
+    passTo(players) {
+        const emptyPlayers = [];
+        for (let player of this.team.players)
+            if (player.isEmpty(players)) emptyPlayers.push(player)
+
+        let emptyPlayer = emptyPlayers[0];
+        for (let player of emptyPlayers)
+            if (player.position.sub(this.position).magnitude() < emptyPlayer.position.sub(this.position.magnitude()))
+                emptyPlayer = player
+
+        return emptyPlayer
     }
 
     pass(ball, players) {
-        if (this.shouldPass(players)) {
-            const targetPlayer = this.passTo();
+        if (!this.isEmpty(players)) {
+            const targetPlayer = this.passTo(players);
 
             if (targetPlayer) {
+                const dist = targetPlayer.position.sub(this.position).magnitude();
                 this.hasBall = false;
                 ball.passing = true;
-                ball.speed = 10;
-                ball.target = targetPlayer.position;
-                ball.position = ball.position.add(ball.target.sub(ball.position).normalize(this.attribute.speed * 2))
+                if (dist > 350) {
+                    ball.speed = 25;
+                    ball.ySpeed = 10;
+                } else {
+                    ball.speed = dist / 20 + 7.5;
+                    ball.ySpeed = -5;
+                }
+                ball.velocity = targetPlayer.position.sub(this.position).normalize(ball.speed);
+                ball.yPosition = 50;
                 ball.isDead = true;
+                ball.dribbling = false;
+                ball.showDOM();
             }
         }
     }
@@ -346,13 +361,15 @@ export const rightHoop = new Hoop(buffer.canvas.width - 55, buffer.canvas.height
 
 export const ball = {
     DOM: document.querySelector("#basketball"),
-    position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
+    position: new Vector2(buffer.canvas.width - 154, 341),
+    // position: new Vector2(buffer.canvas.width / 2, buffer.canvas.height / 2),
     velocity: new Vector2(),
     yPosition: 0,
     speed: 10,
     ySpeed: 0,
     gravity: 1,
     friction: 0.1,
+    elasticity: 0.6,
     size: 15,
     flying: false,
     passing: false,
@@ -401,7 +418,7 @@ export const ball = {
         if (this.yPosition < 0) {
             this.yPosition = 0;
             this.flying = false;
-            this.ySpeed = -this.ySpeed * 0.5;
+            this.ySpeed = -this.ySpeed * this.elasticity;
         }
 
     },

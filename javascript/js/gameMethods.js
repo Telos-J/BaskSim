@@ -73,7 +73,7 @@ export function generateTeams() {
 
     const team1 = new Team(
         [
-            // new Player("PG", 185, 86, 11, "Myron Boyce", 50, 50, target1, pguardAttribute),
+            // new Player("PG", 185, 86, 11, "Myron Boyce", buffer.canvas.width - 150, 341, target1, pguardAttribute),
             new Player("PG", 185, 86, 11, "Myron Boyce", 338, 272, target1, pguardAttribute),
             new Player("SG", 198, 94, 24, "Adam Chester", 293, 135, target1, sguardAttribute),
             new Player("SF", 202, 101, 34, "Daanyal Graves", 101, 423, target1, sforwardAttribute),
@@ -85,7 +85,7 @@ export function generateTeams() {
 
     const team2 = new Team(
         [
-            // new Player("PG", 184, 89, 7, "Damion Lee", 100, 100, target2, pguardAttribute),
+            // new Player("PG", 184, 89, 7, "Damion Lee", buffer.canvas.width - 100, 341, target2, pguardAttribute),
             new Player("PG", 184, 89, 7, "Damion Lee", buffer.canvas.width - 338, 272, target2, pguardAttribute),
             new Player("SG", 200, 98, 13, "Chris Paul", buffer.canvas.width - 293, 135, target2, sguardAttribute),
             new Player("SF", 206, 102, 23, "Zaire Willams", buffer.canvas.width - 101, 423, target2, sforwardAttribute),
