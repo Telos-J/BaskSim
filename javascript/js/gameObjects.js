@@ -52,10 +52,10 @@ export class Player {
         this.wasShooting = false;
         this.range = 100;
         this.coolTime = 0;
-        this.avoidOpponentConst = 1;
+        this.avoidOpponentConst = 2;
         this.markOpponentConst = 1;
         this.avoidWallConst = 1.3;
-        this.chaseBallConst = 20;
+        this.chaseBallConst = 1;
         this.chaseHoopConst = 1;
     }
 
@@ -83,7 +83,7 @@ export class Player {
                 this.chaseHoop();
                 this.pass(ball, players);
             }
-            if (this.hasBall) this.shoot(ball);
+            if (this.hasBall) this.shoot(ball, players);
             this.avoidOpponent(players);
         }
 
@@ -140,11 +140,10 @@ export class Player {
         ball.dribbling = true;
     }
 
-    isEmpty(players) {
+    isEmpty(players, range = this.range) {
         let empty = true;
         for (let player of players) {
-            const dist = this.position.sub(player.position).magnitude()
-            if (this.isOpponent(player) && dist < 100) empty = false;
+            if (this.isOpponent(player) && this.inNeighborhood(player, range)) empty = false;
         }
 
         return empty
@@ -153,7 +152,7 @@ export class Player {
     passTo(players) {
         const emptyPlayers = [];
         for (let player of this.team.players)
-            if (player.isEmpty(players)) emptyPlayers.push(player)
+            if (player.isEmpty(players, 100)) emptyPlayers.push(player)
 
         let emptyPlayer = emptyPlayers[0];
         for (let player of emptyPlayers)
@@ -165,7 +164,7 @@ export class Player {
 
     pass(ball, players) {
         const targetPlayer = this.passTo(players);
-        if (!this.isEmpty(players) && targetPlayer) {
+        if (!this.isEmpty(players, 50) && targetPlayer) {
             const dist = targetPlayer.position.sub(this.position).magnitude();
             this.coolTime = 3;
             this.hasBall = false;
@@ -212,7 +211,7 @@ export class Player {
         return shouldShoot;
     }
 
-    shoot(ball) {
+    shoot(ball, players) {
         const dist = this.target.sub(this.position).magnitude();
 
         if (this.shouldShoot(dist)) {
@@ -234,6 +233,9 @@ export class Player {
 
             if (dist > 235.8) ball.probability = this.attribute.shoot3;
             else ball.probability = this.attribute.shoot;
+
+            ball.isEmpty = false;
+            if (this.isEmpty(players, 100)) ball.isEmpty = true;
         }
     }
 
@@ -302,14 +304,24 @@ export class Player {
     }
 
     drawNeighborhood() {
+        const head = vectorToAngle(this.velocity);
         buffer.fillStyle = 'rgba(0, 0, 0, 0.5)';
         buffer.beginPath();
-        buffer.arc(this.position.x, this.position.y, this.range, 0, Math.PI * 2);
+        buffer.moveTo(this.position.x, this.position.y);
+        buffer.arc(this.position.x, this.position.y, 50, head - Math.PI * 3 / 4, head + Math.PI * 3 / 4);
         buffer.fill();
     }
 
-    inNeighborhood(player) {
-        return player.position.sub(this.position).magnitude() < this.range;
+    inNeighborhood(player, range = this.range) {
+        const relPos = player.position.sub(this.position)
+        const dis = relPos.magnitude();
+
+        const cos =
+            this.velocity.dot(relPos) /
+            this.velocity.magnitude() /
+            relPos.magnitude();
+
+        return dis < range && cos < 1 && cos > Math.cos((Math.PI * 3) / 4);
     }
 
     markOpponent(players) {
@@ -388,6 +400,7 @@ export const ball = {
     inBasket: false,
     bouncingOff: false,
     dribbling: false,
+    isEmpty: false,
 
     move() {
         this.position = this.position.add(this.velocity);
@@ -439,7 +452,9 @@ export const ball = {
     },
 
     isGoal() {
-        return Math.random() < this.probability;
+        console.log(this.probability)
+        const probability = this.isEmpty ? this.probability * 2 : this.probability;
+        return Math.random() < probability;
     },
 
     updateScoreBoard(id) {

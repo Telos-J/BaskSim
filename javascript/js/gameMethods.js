@@ -93,6 +93,10 @@ export function generateTeams() {
         "purple"
     );
 
+    for (let player of team2.players) {
+        player.markOpponentConst = 0
+    }
+
     [team1, team2].forEach((team) => {
         team.players.forEach((player) => {
             player.team = team;

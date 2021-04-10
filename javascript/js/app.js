@@ -24,10 +24,10 @@ function update() {
 function render() {
     drawBackground("#b86125");
     drawCourtLines();
-    players[0].drawNeighborhood();
 
     for (let player of players) {
         player.drawPosition()
+        // player.drawNeighborhood();
     }
 
     ball.drawPosition()
