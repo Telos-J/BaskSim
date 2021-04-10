@@ -442,12 +442,28 @@ export const ball = {
         return Math.random() < this.probability;
     },
 
+    updateScoreBoard(id) {
+        const DOM = document.querySelector(id);
+        let score = parseInt(DOM.innerHTML);
+        if (this.probability === this.player.attribute.shoot3) score += 3;
+        else score += 2;
+        DOM.innerHTML = score < 10 ? '0' + score : score;
+    },
+
     makeGoal(hoop) {
         console.log('goal')
-        if (this.player) this.player.updateStat({
-            goal: true,
-            ball_probability: this.probability,
-        });
+        if (this.player) {
+            this.player.updateStat({
+                goal: true,
+                ball_probability: this.probability,
+            });
+
+            if (hoop.position.x < buffer.canvas.width / 2)
+                this.updateScoreBoard('#right-score-text')
+            else
+                this.updateScoreBoard('#left-score-text')
+        }
+
         this.position.set(hoop.position.x, hoop.position.y);
         this.velocity.set(0, 0);
         this.ySpeed = 0;

@@ -4,9 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+	<link href="https://fonts.googleapis.com/css2?family=Bahiana&display=swap" rel="stylesheet">
     <title>Basketball Simulation</title>
   </head>
   <body>
+    <svg id="scoreboard" width="211" height="178" viewBox="0 0 211 178" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path id="board" d="M211 0H0.5L7 22H28.5L55 159.5H156L184 22H206L211 0Z" fill="url(#paint20_linear)"/>
+    <path id="shine" d="M35.6301 59.0001C54.9999 63.0001 129 121.5 156 159.5H54.9999L35.6301 59.0001Z" fill="url(#paint21_linear)"/>
+    <path id="top-label" d="M190.5 26.5H22L29 59H183.5L190.5 26.5Z" fill="#D15B3C"/>
+    <rect id="left-score-label" x="59" y="70" width="38" height="8" fill="#E8DDC8"/>
+    <path id="left-score" d="M96 84.5H59.5L63.5 125H96V84.5Z" fill="#DFD047"/>
+    <rect id="right-score-label" width="38" height="8" transform="matrix(-1 0 0 1 153 70)" fill="#E8DDC8"/>
+    <path id="right-score" d="M116 84H153L148.945 125H116V84Z" fill="#DFD047"/>
+    <path d="M104 97H108V105H104V97Z" fill="#E8DDC8"/>
+    <path d="M104 111H108V119H104V111Z" fill="#E8DDC8"/>
+    <rect id="bottom-label" x="85" y="133" width="43" height="17" fill="#DFD047"/>
+    <path id="bottom" d="M143 159.5H69L73 177.5H139L143 159.5Z" fill="#DFD047"/>
+	<text id="left-score-text" class="score-text" x="66" y="118" width="28" height="40" fill="black">00</text>
+	<text id="right-score-text" class="score-text" x="120" y="118" width="28" height="40" fill="black">00</text>
+	<text id="title-text" x="65" y="51" width="160" height="32" fill="#E8DDC8">BASKETBALL</text>
+    <defs>
+    <linearGradient id="paint20_linear" x1="105.75" y1="0" x2="105.75" y2="159.5" gradientUnits="userSpaceOnUse">
+    <stop offset="0.117559" stop-color="#0D1943"/>
+    <stop offset="1" stop-color="#175378"/>
+    </linearGradient>
+    <linearGradient id="paint21_linear" x1="95.8148" y1="59" x2="95.8148" y2="159.5" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#0D2951"/>
+    <stop offset="1" stop-color="#5A7EA0"/>
+    </linearGradient>
+    </defs>
+    </svg>
 
     <svg id="court" width="1365" height="347" viewBox="0 0 1365 347" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g id="floor-plates" clip-path="url(#mask)">
@@ -189,10 +216,6 @@
     <canvas id="court-canvas"></canvas>
     <canvas id="topview-canvas"></canvas>
     <div class="display"></div>
-    <div class="scoreboard">
-        <div class="score" id="green-score"></div>
-        <div class="score" id="purple-score"></div>
-    </div>
 
     <svg id="basketball" viewBox="0 0 92 92" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M46 85.8667C68.0177 85.8667 85.8666 68.0178 85.8666 46C85.8666 23.9823 68.0177 6.13336 46 6.13336C23.9822 6.13336 6.1333 23.9823 6.1333 46C6.1333 68.0178 23.9822 85.8667 46 85.8667Z" fill="#FF8A14"/>

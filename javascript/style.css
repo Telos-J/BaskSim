@@ -80,20 +80,10 @@ body {
     fill: #eb6d00;
 }
 
-.scoreboard {
-    background-image: url('./assets/scoreboard.png');
-    background-size: cover;
+#scoreboard {
     position: absolute;
-    width: 40vw;
-    height: 6vw;
     left: 50%;
     transform: translateX(-50%);
-    display: flex;
-    justify-content: space-around;
-}
-
-.score {
-    font-size: 3rem;
 }
 
 #court {
@@ -134,8 +124,23 @@ body {
     height: 20vh;
 }
 
-.scoreboard {
-    display: none;
+#title-text {
+    position: absolute;
+    font-family: Bahiana;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 31px;
+    letter-spacing: 0.05em;
+}
+
+.score-text {
+	position: absolute;
+    font-family: Bahiana;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 38px;
+    line-height: 41px;
 }
 
 #pin {
