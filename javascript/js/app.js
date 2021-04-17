@@ -7,8 +7,12 @@ function update() {
         player.initState()
     }
 
+
     for (let player of players) {
-        if (!player.coolTime) player.control(ball, players);
+        if (!player.coolTime) {
+            if (player === controlPlayer) player.control(ball, players)
+            else player.ai(ball, players);
+        }
     }
 
     for (let player of players) {
@@ -47,6 +51,7 @@ function render() {
 
 const [roster1, roster2] = generateTeams();
 const players = collectPlayers(roster1, roster2);
+const controlPlayer = players[0];
 const engine = new Engine(1000 / 30, update, render);
 
 resize();

@@ -70,7 +70,7 @@ export class Player {
         return this.wasMoving !== this.isMoving || this.hadBall !== this.hasBall
     }
 
-    control(ball, players) {
+    ai(ball, players) {
         if (ball.isDead) {
             this.chaseBall(ball);
             this.grabBall(ball);
@@ -89,6 +89,27 @@ export class Player {
 
         this.avoidWall();
         this.move();
+    }
+
+    control(ball, players) {
+        const velocity = new Vector2()
+        if (controller.arrowUp) velocity.y -= 1;
+        if (controller.arrowDown) velocity.y += 1;
+        if (controller.arrowLeft) velocity.x -= 1;
+        if (controller.arrowRight) velocity.x += 1;
+        this.velocity = velocity.normalize(this.attribute.speed)
+
+        if (ball.isDead) {
+            this.grabBall(ball);
+        } else if (this.isDefense(ball)) {
+            this.grabBall(ball);
+        } else if (this.isOffense(ball)) {
+            if (this.hasBall) {
+                this.dribble(ball);
+            }
+            if (this.hasBall && controller.space) this.forceShoot(ball, players);
+        }
+        this.move()
     }
 
     move() {
@@ -215,28 +236,33 @@ export class Player {
         const dist = this.target.sub(this.position).magnitude();
 
         if (this.shouldShoot(dist)) {
-            this.hasBall = false;
-            this.isShooting = true;
-            this.coolTime = 50;
-
-            ball.flying = true;
-            ball.speed = 3 / 200 * dist + 18.5;
-            const angle = Math.PI / (0.6 / 200 * dist + 2.1);;
-            ball.velocity = this.target.sub(this.position).normalize(ball.speed * Math.cos(angle));
-            ball.ySpeed = ball.speed * Math.sin(angle);
-            ball.yPosition = 0;
-            ball.showDOM();
-            ball.isDead = true;
-            ball.inBasket = false;
-            ball.bouncingOff = false;
-            ball.dribbling = false;
-
-            if (dist > 235.8) ball.probability = this.attribute.shoot3;
-            else ball.probability = this.attribute.shoot;
-
-            ball.isEmpty = false;
-            if (this.isEmpty(players, 100)) ball.isEmpty = true;
+            this.forceShoot(ball, players)
         }
+    }
+
+    forceShoot(ball, players) {
+        const dist = this.target.sub(this.position).magnitude();
+        this.hasBall = false;
+        this.isShooting = true;
+        this.coolTime = 50;
+
+        ball.flying = true;
+        ball.speed = 3 / 200 * dist + 18.5;
+        const angle = Math.PI / (0.6 / 200 * dist + 2.1);;
+        ball.velocity = this.target.sub(this.position).normalize(ball.speed * Math.cos(angle));
+        ball.ySpeed = ball.speed * Math.sin(angle);
+        ball.yPosition = 0;
+        ball.showDOM();
+        ball.isDead = true;
+        ball.inBasket = false;
+        ball.bouncingOff = false;
+        ball.dribbling = false;
+
+        if (dist > 235.8) ball.probability = this.attribute.shoot3;
+        else ball.probability = this.attribute.shoot;
+
+        ball.isEmpty = false;
+        if (this.isEmpty(players, 100)) ball.isEmpty = true;
     }
 
     update() {

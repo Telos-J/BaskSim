@@ -4,7 +4,7 @@ const padding = 5
 const width = 940
 const height = 144
 canvas.width = width + padding * 2
-canvas.height = height + padding * 2 
+canvas.height = height + padding * 2
 canvas.style.width = canvas.width + 'px'
 canvas.style.height = canvas.height + 'px'
 
@@ -17,19 +17,15 @@ let mousePos = new Vector2();
 buffer.canvas.width = 940;
 buffer.canvas.height = 500;
 
-function keyDownUp(event) {
-  controller.keyDownUp(event.type, event.keyCode);
-}
-
 function handleMouseMove(event) {
-  mousePos = convertToBufferCoord(
-    new Vector2(event.clientX, event.clientY)
-  );
+    mousePos = convertToBufferCoord(
+        new Vector2(event.clientX, event.clientY)
+    );
 };
 
 window.addEventListener("resize", resize);
-window.addEventListener("keydown", keyDownUp);
-window.addEventListener("keyup", keyDownUp);
+window.addEventListener('keydown', (e) => controller.keydown(e))
+window.addEventListener('keyup', (e) => controller.keyup(e))
 // canvas.addEventListener("mousemove", handleMouseMove);
 
 gsap.registerPlugin(MorphSVGPlugin);
