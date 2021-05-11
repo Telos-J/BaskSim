@@ -51,7 +51,7 @@ function render() {
 
 const [roster1, roster2] = generateTeams();
 const players = collectPlayers(roster1, roster2);
-const controlPlayer = roster2.players[0];
+const controlPlayer = roster1.players[0];
 const engine = new Engine(1000 / 30, update, render);
 
 resize();
