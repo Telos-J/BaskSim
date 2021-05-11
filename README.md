@@ -1,1 +1,2 @@
-# Basketball-Simulaton
+# BaskSim
+A simulation of basketball strategies
